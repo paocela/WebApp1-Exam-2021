@@ -86,7 +86,7 @@ function ClosedQuestion(props) {
 
     return (
         <ListGroup as="ul">
-            <ListGroup.Item as="li" active>
+            <ListGroup.Item as="li" variant="secondary">
                 {props.singleQuestion.question}
             </ListGroup.Item>
             <Form.Group >
@@ -99,11 +99,11 @@ function ClosedQuestion(props) {
 function OpenQuestion(props) {
     return (
         <ListGroup as="ul">
-            <ListGroup.Item as="li" active>
+            <ListGroup.Item as="li" variant="secondary">
                 {props.singleQuestion.question}
             </ListGroup.Item>
             <ListGroup.Item as="li">
-                <Form.Control type="answer" placeholder="Enter answer here..." />
+                <Form.Control as="textarea" rows={3} placeholder="Enter answer here..."/>
             </ListGroup.Item>
         </ListGroup>
     );

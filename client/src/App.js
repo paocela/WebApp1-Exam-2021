@@ -146,7 +146,7 @@ function App() {
               </Row>
               <Row>
                 <Col>
-                  <Button className="btn btn-lg btn-primary fixed-right-bottom" onClick={() => { }}>SUBMIT</Button>
+                  <Button className="btn btn-lg fixed-right-bottom" variant="outline-primary" onClick={() => { }}>SUBMIT</Button>
                 </Col>
               </Row>
             </Container>
