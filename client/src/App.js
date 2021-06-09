@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import NavBar from './NavBar';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import { useState } from 'react';
 import React from 'react';
@@ -14,6 +15,7 @@ import { Redirect } from 'react-router-dom';
 import { LoginForm, LogoutButton } from './LoginComponents';
 import LeftSide from './LeftSide';
 import RightSide from './RightSide';
+import { Col } from 'react-bootstrap';
 
 let initSurveyList = [
   {
@@ -35,10 +37,10 @@ let initSurveyList = [
     title: "Interest",
     questions: [
       {
-        question: "Your favourite sport (select 2)?",
+        question: "Your favourite sport? (select 2)",
         answers: ["Golf", "Basketball", "Soccer", "Others..."],
         min: 0,
-        max: 1
+        max: -1
       },
       {
         question: "Tell me a story",
@@ -69,7 +71,7 @@ function App() {
   const [errorMessage, setErrorMessage] = useState('');
   const [message, setMessage] = useState('');
   const [surveyList, setSurveyList] = useState(initSurveyList);
-  const [currentSurvey, setCurrentSurvey] = useState(initSurveyList[0].title)
+  const [currentSurvey, setCurrentSurvey] = useState(initSurveyList[0])
 
 
 
@@ -141,6 +143,11 @@ function App() {
               <Row>
                 <LeftSide surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} />
                 <RightSide currentSurvey={currentSurvey} />
+              </Row>
+              <Row>
+                <Col>
+                  <Button className="btn btn-lg btn-primary fixed-right-bottom" onClick={() => { }}>SUBMIT</Button>
+                </Col>
               </Row>
             </Container>
           </>

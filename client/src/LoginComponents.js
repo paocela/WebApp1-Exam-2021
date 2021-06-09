@@ -33,6 +33,7 @@ function LoginForm(props) {
     }
   };
 
+  // Link "Go back as user" button: position to the rigth of the container
   return (<>
     <Row>
       <Col></Col>

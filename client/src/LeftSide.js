@@ -17,7 +17,7 @@ function LeftSide(props) {
                     
                     let y = "/"+x.title;
 
-                   return (<SurveyRow surveyTitle={x.title} currentSurvey={props.currentSurvey} setCurrentSurvey={props.setCurrentSurvey} key={x} />)
+                   return (<SurveyRow survey={x} currentSurvey={props.currentSurvey} setCurrentSurvey={props.setCurrentSurvey} key={x} />)
                 })
                 }
             </ListGroup>
@@ -29,10 +29,11 @@ function SurveyRow(props) {
 
     let active=false;
     
-    if (props.currentSurvey === props.surveyTitle) {
+    if (props.currentSurvey.title === props.survey.title) {
+        console.log(props.currentSurvey)
        active=true;
     }
-    return (<ListGroup.Item onClick={() => props.setCurrentSurvey(props.surveyTitle)} action active={active} className="leftButton bg-transparent">{props.surveyTitle}</ListGroup.Item>);
+    return (<ListGroup.Item onClick={() => props.setCurrentSurvey(props.survey)} action active={active} className="leftButton bg-transparent">{props.survey.title}</ListGroup.Item>);
 }
 
 
