@@ -3,6 +3,8 @@ import Nav from "react-bootstrap/Nav";
 import './NavBar.css';
 import { iconSurvey, iconLogin, iconLogout } from './Icons.js'
 import { Container, Form, FormControl } from "react-bootstrap";
+import { Redirect } from "react-router";
+import { Link } from  'react-router-dom';
 
 
 function NavBar(props) {
@@ -16,9 +18,9 @@ function NavBar(props) {
             </div>
             <Navbar.Brand className="navbar-nav ml-md-auto">
                 <span className="text-white justify-content-center align-self-center ">{props.message}</span>
-                <Nav.Link className="nav-item nav-link" href="#" onClick={props.doLogOut}>
+                <Link to="/login" key="/login" className="nav-item nav-link">
                     {iconLogin}
-                </Nav.Link>
+                </Link>
                 <Nav.Link className="nav-item nav-link" href="#" onClick={props.doLogOut}>
                     {iconLogout}
                 </Nav.Link>

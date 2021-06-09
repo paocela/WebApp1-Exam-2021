@@ -1,0 +1,28 @@
+.leftButton:hover{
+    background-color: #90d1ff!important;
+}
+
+.leftButton.active {
+    background-color: #0390f5!important;
+    border-color: #0390f5!important;
+}
+
+  .below-nav {
+  padding-top: 5rem;
+}
+
+.leftButton {
+  background: rgba(216, 191, 216, 0);
+}
+
+.vheight-100 {
+    min-height: 100vh;
+}
+  
+.leftDiv {
+    background-color: rgb(249, 249, 250);
+}
+
+.leftSide-title {
+    text-align: center;
+}
