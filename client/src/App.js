@@ -19,6 +19,7 @@ import LeftSide from './LeftSide';
 import RightSide from './RightSide';
 import RightSideAdmin from './RightSideAdmin';
 import { Col } from 'react-bootstrap';
+import CreateSurvey from './CreateSurvey';
 
 let initSurveyList = [
   {
@@ -173,7 +174,7 @@ let initSurveyList = [
 
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(true); // TODO set to false when completed
   const [errorMessage, setErrorMessage] = useState('');
   const [message, setMessage] = useState('');
   const [surveyList, setSurveyList] = useState(initSurveyList);
@@ -281,6 +282,7 @@ function App() {
               <React.Fragment>
                 <NavBar title="Survey Manager - Admin" doLogOut={doLogOut} />
                 <Row>
+                  <CreateSurvey surveyList={surveyList} setSurveyList={setSurveyList} />
 
                 </Row>
 

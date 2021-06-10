@@ -3,7 +3,8 @@
     vertical-align: sub;
 }
 
-.switch-user-left {
+.switch-user-arrow {
     align-items: flex-end;
+    width: 100%;
 }
 

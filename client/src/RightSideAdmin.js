@@ -101,7 +101,7 @@ function RightSideAdmin(props) {
                     <Col>
                         <Row>
                             <Col>
-                                <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { calculateNextUser(0) }}>{switchUserLeft}</Button>
+                                <Button className="btn btn-md switch-user-arrow" variant="outline-primary" onClick={() => { calculateNextUser(0) }}>{switchUserLeft}</Button>
                             </Col>
                             <Col>
                                 <h3>
@@ -109,7 +109,7 @@ function RightSideAdmin(props) {
                                 </h3>
                             </Col>
                             <Col>
-                                <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { calculateNextUser(1) }}>{switchUserRight}</Button>
+                                <Button className="btn btn-md switch-user-arrow" variant="outline-primary" onClick={() => { calculateNextUser(1) }}>{switchUserRight}</Button>
                             </Col>
                         </Row>
                     </Col>

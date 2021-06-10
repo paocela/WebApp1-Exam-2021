@@ -1,7 +1,7 @@
 import { ListGroup } from 'react-bootstrap'
 import './App.css';
 import './LeftSide.css';
-import { Col, Row } from "react-bootstrap"
+import { Col, Row, Button } from "react-bootstrap"
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -19,6 +19,16 @@ function LeftSide(props) {
                         return (<SurveyRow survey={x} currentSurvey={props.currentSurvey} setCurrentSurvey={props.setCurrentSurvey} key={x} admin={props.admin} setIndexCurrentUser={props.setIndexCurrentUser} />)
                     })
                 }
+                <ListGroup.Item className="bg-transparent">
+                    <div>
+
+                        {!props.admin ? "" :
+                            <Link type="submit" to="/admin/create" key="/admin/create">
+                                <Button className="btn btn-new-survey btn-md btn-block" variant="outline-primary" onClick={() => { }}>ADD NEW SURVEY</Button>
+                            </Link>
+                        }
+                    </div>
+                </ListGroup.Item>
             </ListGroup>
         </Col>
     );
@@ -39,8 +49,8 @@ function SurveyRow(props) {
     }
     return (<ListGroup.Item onClick={() => {
         props.setCurrentSurvey(props.survey);
-        if(props.survey.users.length == 0) {
-            props.setIndexCurrentUser(null);    
+        if (props.survey.users.length == 0) {
+            props.setIndexCurrentUser(null);
         }
         props.setIndexCurrentUser(0);
     }} action active={active} className="leftButton bg-transparent">
