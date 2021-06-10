@@ -30,3 +30,9 @@
 .btn-new-survey {
     width: 100%;
 }
+
+.form-element {
+    display: flex;
+    justify-content: left; /* align horizontal */
+    align-items: center; /* align vertical */
+}
