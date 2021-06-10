@@ -47,17 +47,19 @@ questions: [
 
 
 function CreateSurvey(props) {
+    // global use states needed througout the whole page
     let [questionList, setQuestionList] = useState([]);
-    let [optional, setOptional] = useState(false); // set if optional or mandatory
     let [numberAnswers, setNumberAnswers] = useState(-1); // number answers of a question
-    let [multipleResponses, setMultipleResponses] = useState(false); // set if single response or multiple possible
+    let [OptionalClosed, setOptionalClosed] = useState(""); // set if optional or mandatory
+    let [multipleResponses, setMultipleResponses] = useState(""); // set if single response or multiple possible
+    let [optionalOpen, setOptionalOpen] = useState(""); // set if optional or mandatory
 
 
     return (
         <>
             <Row>
-                <CreateLeftSide  setOptional={setOptional} setNumberAnswers={setNumberAnswers} setMultipleResponses={setMultipleResponses}/>
-                <CreateRightSide  />
+                <CreateLeftSide setQuestionList={setQuestionList} setOptionalOpen={setOptionalOpen} setOptionalClosed={setOptionalClosed} setNumberAnswers={setNumberAnswers} setMultipleResponses={setMultipleResponses} />
+                <></>
             </Row>
         </>
     );
@@ -184,11 +186,14 @@ function OpenQuestion(props) {
 
 
 function CreateLeftSide(props) {
-    let [optional, setOptional] = useState(false); // set if optional or mandatory
-    let [numberAnswers, setNumberAnswers] = useState(-1); // number answers of a question
-    let [multipleResponses, setMultipleResponses] = useState(false); // set if single response or multiple possible
 
+    // labda-functions to handle dynamically value changes in input form
+    const handleNumberAnswers = (event) => {props.setNumberAnswers(event.target.value)};
+    const handleOptionalClosed = (event) => { props.setOptionalClosed(event.target.value) };
+    const handleMultipleResponses = (event) => { props.setMultipleResponses(event.target.value) };
+    const handleOptionalOpen = (event) => { props.setOptionalOpen(event.target.value)};
 
+    // control input fields from wrong input values (sanity checks)
     let checkCreateFields = () => {
 
     };
@@ -204,7 +209,7 @@ function CreateLeftSide(props) {
                     <Form>
                         <Row>
                             <Col className="form-element">Number of answers: </Col>
-                            <Col><Form.Control size="sm" placeholder="..." /></Col>
+                            <Col><Form.Control onChange={handleNumberAnswers} size="sm" placeholder="..." /></Col>
                         </Row>
                     </Form>
                 </ListGroup.Item>
@@ -214,16 +219,20 @@ function CreateLeftSide(props) {
                             <Col className="form-element">Constraints (min):</Col>
                             <Col>
                                 <Form.Check
+                                    onChange={handleOptionalClosed}
                                     type="radio"
                                     label="optional"
                                     name="constraintsClosed"
                                     id="formHorizontalRadios1"
+                                    value="optional"
                                 />
                                 <Form.Check
+                                    onChange={handleOptionalClosed}
                                     type="radio"
                                     label="mandatory"
                                     name="constraintsClosed"
                                     id="formHorizontalRadios2"
+                                    value="mandatory"
                                 />
                             </Col>
                         </Row>
@@ -235,23 +244,27 @@ function CreateLeftSide(props) {
                             <Col className="form-element">Number answers (max):</Col>
                             <Col>
                                 <Form.Check
+                                    onChange={handleMultipleResponses}
                                     type="radio"
                                     label="single"
                                     name="numAnswersClosed"
                                     id="formHorizontalRadios1"
+                                    value="single"
                                 />
                                 <Form.Check
+                                    onChange={handleMultipleResponses}
                                     type="radio"
                                     label="multiple"
                                     name="numAnswersClosed"
                                     id="formHorizontalRadios2"
+                                    value="multiple"
                                 />
                             </Col>
                         </Row>
                     </Form.Group>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                    <Button className="btn btn-new-survey btn-md btn-block" variant="outline-primary" onClick={() => { }}>CREATE QUESTION</Button>
+                    <Button className="btn btn-new-survey btn-md btn-block" variant="outline-primary" onClick={() => {checkCreateFields()}}>CREATE QUESTION</Button>
                 </ListGroup.Item>
 
                 <ListGroup.Item active >
@@ -263,23 +276,27 @@ function CreateLeftSide(props) {
                             <Col className="form-element">Constraints (min):</Col>
                             <Col>
                                 <Form.Check
+                                    onChange={handleOptionalOpen}
                                     type="radio"
                                     label="optional"
                                     name="constraints"
                                     id="formHorizontalRadios1"
+                                    value="optional"
                                 />
                                 <Form.Check
+                                    onChange={handleOptionalOpen}
                                     type="radio"
                                     label="mandatory"
                                     name="constraints"
                                     id="formHorizontalRadios2"
+                                    value="mandatory"
                                 />
                             </Col>
                         </Row>
                     </Form.Group>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                    <Button className="btn btn-new-survey btn-md btn-block" variant="outline-primary" onClick={() => {checkCreateFields}}>CREATE QUESTION</Button>
+                    <Button className="btn btn-new-survey btn-md btn-block" variant="outline-primary" onClick={() => {checkCreateFields()}}>CREATE QUESTION</Button>
                 </ListGroup.Item>
             </ListGroup>
         </Col>

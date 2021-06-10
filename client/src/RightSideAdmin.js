@@ -105,7 +105,7 @@ function RightSideAdmin(props) {
                             </Col>
                             <Col>
                                 <h2>
-                                    <span className="badge rounded-pill bg-info">User: {props.currentSurvey.users[props.indexCurrentUser]}</span>
+                                    <span className="badge rounded-pill bg-primary">User: {props.currentSurvey.users[props.indexCurrentUser]}</span>
                                 </h2>
                             </Col>
                             <Col>
