@@ -1,34 +1,61 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, ListGroup, Button } from "react-bootstrap";
+import { Form, ListGroup, Badge } from "react-bootstrap";
+import { switchUserRight, switchUserLeft } from './Icons.js'
+import './RightSide.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import './App.css';
 import React from 'react';
 import Col from "react-bootstrap/Col"
 import Row from "react-bootstrap/Row"
+import Button from "react-bootstrap/Button"
 
 //<span class="badge badge-pill badge-primary">multiple answers allowedoptional</span>
 //<span class="badge badge-pill badge-success">Add New Task</span>
 //<span class="badge badge-pill badge-success">multiple answers allowedoptional</span>
-/*
+/* Survey Example Format
   {
     title: "Mood",
+    users: ["paolo", "luca", "laura"],
     questions: [
       {
         question: "How are you?",
         answers: ["Good", "Tired", "Bored"],
         min: 0,
-        max: -1
+        max: -1,
+        responses: [
+          {
+            response: [0, 1, 0]
+          },
+          {
+            response: [1, 0, 0]
+          },
+          {
+            response: [0, 0, 1]
+          },
+        ]
       },
       {
         question: "Describe your day?",
-        answers: ["I've been programming a web app all day!"]
+        answers: ["I've been programming a web app all day!"],
+        min: 0,
+        max: -1,
+        responses: [
+          {
+            response: ["nothing to do"]
+          },
+          {
+            response: ["study all day"]
+          },
+          {
+            response: ["crazy"]
+          },
+        ]
       }
-    ]
-  }
+    ],
+  },
 */
 
 
-function RightSide(props) {
+function RightSideAdmin(props) {
     let questions = [];
     let singleQuestion;
     // build questions
@@ -36,35 +63,55 @@ function RightSide(props) {
         singleQuestion = props.currentSurvey.questions[index];
         if (singleQuestion.answers.length == 1) {
             // open question
-            questions.push(<div><OpenQuestion singleQuestion={singleQuestion} /><br /></div>)
+            questions.push(<div><OpenQuestion singleQuestion={singleQuestion} indexCurrentUser={props.indexCurrentUser} /><br /></div>)
         } else if (singleQuestion.answers.length >= 2) {
             // closed question
-            questions.push(<div><ClosedQuestion singleQuestion={singleQuestion} /><br /></div>)
+            questions.push(<div><ClosedQuestion singleQuestion={singleQuestion} indexCurrentUser={props.indexCurrentUser} /><br /></div>)
 
         } else {
             // PANIC
         }
     }
-    // Form.Group "Enter username here..." textbox: position to the rigth of the container
+
+    let calculateNextUser = (flag) => {
+        if (flag == 0) {
+            // decrement index
+            if (props.indexCurrentUser - 1 < 0) {
+                props.setIndexCurrentUser(props.currentSurvey.users.length - 1);
+            } else {
+                props.setIndexCurrentUser((i) => i - 1);
+            }
+        } else {
+            // increment index
+            if (props.indexCurrentUser + 1 >= props.currentSurvey.users.length) {
+                props.setIndexCurrentUser(0);
+            } else {
+                props.setIndexCurrentUser((i) => i + 1);
+            }
+        }
+    }
+
+    // TODO Form.Group "Enter username here..." textbox: position to the rigth of the container
     return (
         <React.Fragment>
             <Col sm={8} className="below-nav vheight-100">
                 <Row>
-                    <Col>
-                        <h2>{props.currentSurvey.title}</h2>
-                    </Col>
+                    <Col><h2>{props.currentSurvey.title}</h2></Col>
                     <Col></Col>
                     <Col>
-                        <Form.Group className="mb-3">
-                            <Row>
-                                <Col sm="8">
-                                    <Form.Control placeholder="Enter username here..." />
-                                </Col>
-                                <Col>
-                                    <Button className="btn btn-md" variant="outline-primary" onClick={() => { }}>SUBMIT</Button>
-                                </Col>
-                            </Row>
-                        </Form.Group>
+                        <Row>
+                            <Col>
+                                <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { calculateNextUser(0) }}>{switchUserLeft}</Button>
+                            </Col>
+                            <Col>
+                                <h3>
+                                    <span className="badge rounded-pill bg-primary">User: {props.currentSurvey.users[props.indexCurrentUser]}</span>
+                                </h3>
+                            </Col>
+                            <Col>
+                                <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { calculateNextUser(1) }}>{switchUserRight}</Button>
+                            </Col>
+                        </Row>
                     </Col>
                 </Row>
                 <ListGroup variant="flush">
@@ -98,7 +145,9 @@ function ClosedQuestion(props) {
     for (let index in props.singleQuestion.answers) {
         answer = props.singleQuestion.answers[index];
         // TODO: fix radio buttons (don't force single option and don't allow to deselect, for optional case)
-        answerRowList.push(<ListGroup.Item as="li"><Form.Check type={type} label={answer} id={answer} /></ListGroup.Item>);
+        answerRowList.push(<ListGroup.Item as="li">
+            <Form.Check type={type} checked={props.singleQuestion.responses[props.indexCurrentUser].response[index]} label={answer} id={answer} />
+        </ListGroup.Item>);
     }
 
     return (
@@ -128,6 +177,8 @@ function OpenQuestion(props) {
         optional = "optional";
     }
 
+    console.log(props.singleQuestion.responses[props.indexCurrentUser].response[0])
+
     return (
         <ListGroup as="ul">
             <ListGroup.Item as="li" variant="secondary">
@@ -141,10 +192,10 @@ function OpenQuestion(props) {
                 </Row>
             </ListGroup.Item>
             <ListGroup.Item as="li">
-                <Form.Control as="textarea" rows={3} placeholder="Enter answer here..." />
+                <Form.Control as="textarea" plaintext readOnly value={props.singleQuestion.responses[props.indexCurrentUser].response[0]} />
             </ListGroup.Item>
         </ListGroup>
     );
 }
 
-export default RightSide;
+export default RightSideAdmin;

@@ -1,10 +1,12 @@
-import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import './App.css';
 import NavBar from './NavBar';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
+import { Badge } from 'react-bootstrap'
 import { useState } from 'react';
 import React from 'react';
 //import dayjs from 'dayjs';
@@ -15,55 +17,159 @@ import { Redirect } from 'react-router-dom';
 import { LoginForm, LogoutButton } from './LoginComponents';
 import LeftSide from './LeftSide';
 import RightSide from './RightSide';
+import RightSideAdmin from './RightSideAdmin';
 import { Col } from 'react-bootstrap';
 
 let initSurveyList = [
   {
     title: "Mood",
+    users: ["paolo", "luca", "laura"],
     questions: [
       {
         question: "How are you?",
         answers: ["Good", "Tired", "Bored"],
         min: 0,
-        max: -1
+        max: -1,
+        responses: [
+          {
+            response: [0, 1, 0]
+          },
+          {
+            response: [1, 0, 0]
+          },
+          {
+            response: [0, 0, 1]
+          },
+        ]
       },
       {
         question: "Describe your day?",
-        answers: ["I've been programming a web app all day!"]
+        answers: ["I've been programming a web app all day!"],
+        min: 0,
+        max: -1,
+        responses: [
+          {
+            response: ["nothing to do"]
+          },
+          {
+            response: ["study all day"]
+          },
+          {
+            response: ["crazy"]
+          },
+        ]
       }
-    ]
+    ],
   },
   {
     title: "Interest",
+    users: ["paolo", "luca", "laura"],
     questions: [
       {
         question: "Your favourite sport? (select 2)",
         answers: ["Golf", "Basketball", "Soccer", "Others..."],
         min: 0,
-        max: -1
+        max: -1,
+        responses: [
+          {
+            response: [1, 1, 0, 0]
+          },
+          {
+            response: [1, 0, 1, 1]
+          },
+          {
+            response: [0, 0, 1, 0]
+          },
+        ]
       },
       {
         question: "Tell me a story",
-        answers: ["I don't know any stories"]
+        answers: ["I don't know any stories"],
+        min: 1,
+        max: -1,
+        responses: [
+          {
+            response: ["no story"]
+          },
+          {
+            response: ["once upon a time in hollywood"]
+          },
+          {
+            response: ["this story is long"]
+          },
+        ]
       }
     ]
   },
   {
     title: "Personality",
+    users: ["paolo", "luca", "laura", "gigino"],
     questions: [
       {
         question: "What's your name?",
-        answers: ["Paolo"]
+        answers: ["Paolo"],
+        min: 1,
+        max: -1,
+        responses: [
+          {
+            response: ["my name is paolo"]
+          },
+          {
+            response: ["my name is luca"]
+          },
+          {
+            response: ["my name is laura"]
+          },
+          {
+            response: ["my name is gigino"]
+          }
+        ]
       },
       {
         question: "What do you like to eat?",
         answers: ["Pasta", "Nutella", "Insalata"],
         min: 1,
-        max: 1
+        max: 1,
+        responses: [
+          {
+            response: [0, 1, 0]
+          },
+          {
+            response: [1, 0, 0]
+          },
+          {
+            response: [0, 0, 1]
+          },
+          {
+            response: [1, 0, 1]
+          },
+        ]
+      },
+      {
+        question: "What's your favourite color?",
+        answers: ["Blue", "Red", "Orange", "Yellow", "Black"],
+        min: 1,
+        max: 1,
+        responses: [
+          {
+            response: [0, 1, 0, 1, 1]
+          },
+          {
+            response: [1, 0, 0, 0, 0]
+          },
+          {
+            response: [0, 0, 1, 1, 0]
+          },
+          {
+            response: [0, 1, 0, 1, 0]
+          },
+        ]
       }
     ]
   }
 ]
+
+
 
 
 function App() {
@@ -72,6 +178,7 @@ function App() {
   const [message, setMessage] = useState('');
   const [surveyList, setSurveyList] = useState(initSurveyList);
   const [currentSurvey, setCurrentSurvey] = useState(initSurveyList[0])
+  const [indexCurrentUser, setIndexCurrentUser] = useState(currentSurvey.users.length == 0 ? null : 0)
 
 
 
@@ -141,13 +248,8 @@ function App() {
             <Container fluid>
               <NavBar title="Survey Manager" doLogOut={doLogOut} />
               <Row>
-                <LeftSide surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} />
-                <RightSide currentSurvey={currentSurvey} />
-              </Row>
-              <Row>
-                <Col>
-                  <Button className="btn btn-lg fixed-right-bottom" variant="outline-primary" onClick={() => { }}>SUBMIT</Button>
-                </Col>
+                <LeftSide surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={false} setIndexCurrentUser={setIndexCurrentUser} />
+                <RightSide currentSurvey={currentSurvey} admin={true} />
               </Row>
             </Container>
           </>
@@ -157,7 +259,8 @@ function App() {
           <>
             <NavBar title="Survey Manager - Admin" doLogOut={doLogOut} />
             <Row>
-
+              <LeftSide surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={true} setIndexCurrentUser={setIndexCurrentUser} />
+              <RightSideAdmin currentSurvey={currentSurvey} indexCurrentUser={indexCurrentUser} setIndexCurrentUser={setIndexCurrentUser} />
             </Row>
 
           </>
