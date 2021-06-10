@@ -6,9 +6,6 @@ import React from 'react';
 import Col from "react-bootstrap/Col"
 import Row from "react-bootstrap/Row"
 
-//<span class="badge badge-pill badge-primary">multiple answers allowedoptional</span>
-//<span class="badge badge-pill badge-success">Add New Task</span>
-//<span class="badge badge-pill badge-success">multiple answers allowedoptional</span>
 /*
   {
     title: "Mood",
@@ -95,6 +92,7 @@ function ClosedQuestion(props) {
         optional = "optional";
     }
 
+    // build answers for single question
     for (let index in props.singleQuestion.answers) {
         answer = props.singleQuestion.answers[index];
         // TODO: fix radio buttons (don't force single option and don't allow to deselect, for optional case)

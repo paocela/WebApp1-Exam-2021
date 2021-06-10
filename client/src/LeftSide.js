@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 
-
+// list of surveys titles - map each survey to a list element (with Link to allow proper setting of URL)
 function LeftSide(props) {
 
     return (
@@ -38,15 +38,19 @@ function SurveyRow(props) {
     let active = false;
     let numResponses = null;
 
+    // differentiate among leftSide for user and for admin
     if (props.admin) {
         console.log(props.currentSurvey)
         numResponses = props.survey.users.length;
         console.log(numResponses)
     }
 
+    // select currect active list element
     if (props.currentSurvey.title === props.survey.title) {
         active = true;
     }
+
+    // onClick allows to properly select a different element and switch among surveys
     return (<ListGroup.Item onClick={() => {
         props.setCurrentSurvey(props.survey);
         if (props.survey.users.length == 0) {

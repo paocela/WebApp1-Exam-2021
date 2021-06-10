@@ -174,6 +174,7 @@ let initSurveyList = [
 
 
 function App() {
+  // global useState for handling of users, surveys and admins
   const [loggedIn, setLoggedIn] = useState(true); // TODO set to false when completed
   const [errorMessage, setErrorMessage] = useState('');
   const [message, setMessage] = useState('');
@@ -182,7 +183,7 @@ function App() {
   const [indexCurrentUser, setIndexCurrentUser] = useState(currentSurvey.users.length == 0 ? null : 0)
 
 
-
+  // functions to handle login and logout - interact with server
   const doLogIn = async (credentials) => {
     try {
       const user = await logIn(credentials);
@@ -229,7 +230,7 @@ function App() {
     await fetch('/API/login/current', { method: 'DELETE' });
   }
 
-
+  // main app components - with routes
   return (
     <Router>
       <Switch>

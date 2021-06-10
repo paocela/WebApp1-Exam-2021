@@ -8,9 +8,6 @@ import Col from "react-bootstrap/Col"
 import Row from "react-bootstrap/Row"
 import Button from "react-bootstrap/Button"
 
-//<span class="badge badge-pill badge-primary">multiple answers allowedoptional</span>
-//<span class="badge badge-pill badge-success">Add New Task</span>
-//<span class="badge badge-pill badge-success">multiple answers allowedoptional</span>
 /* Survey Example Format
   {
     title: "Mood",
@@ -58,6 +55,7 @@ import Button from "react-bootstrap/Button"
 function RightSideAdmin(props) {
     let questions = [];
     let singleQuestion;
+
     // build questions
     for (let index in props.currentSurvey.questions) {
         singleQuestion = props.currentSurvey.questions[index];
@@ -73,16 +71,17 @@ function RightSideAdmin(props) {
         }
     }
 
+    // function to allow moving between different users
     let calculateNextUser = (flag) => {
         if (flag == 0) {
-            // decrement index
+            // decrement index - move left
             if (props.indexCurrentUser - 1 < 0) {
                 props.setIndexCurrentUser(props.currentSurvey.users.length - 1);
             } else {
                 props.setIndexCurrentUser((i) => i - 1);
             }
         } else {
-            // increment index
+            // increment index - move right
             if (props.indexCurrentUser + 1 >= props.currentSurvey.users.length) {
                 props.setIndexCurrentUser(0);
             } else {
@@ -129,6 +128,7 @@ function ClosedQuestion(props) {
     let optional = "mandatory";
     let multiple = "";
 
+    // render input forms correctly
     if (props.singleQuestion.max == 1) {
         // only single answer allowed --> radio button
         type = "radio";
@@ -142,6 +142,7 @@ function ClosedQuestion(props) {
         optional = "optional";
     }
 
+    // build answers for single question
     for (let index in props.singleQuestion.answers) {
         answer = props.singleQuestion.answers[index];
         // TODO: fix radio buttons (don't force single option and don't allow to deselect, for optional case)
@@ -176,8 +177,6 @@ function OpenQuestion(props) {
     if (props.singleQuestion.min == 0) {
         optional = "optional";
     }
-
-    console.log(props.singleQuestion.responses[props.indexCurrentUser].response[0])
 
     return (
         <ListGroup as="ul">

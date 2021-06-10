@@ -5,6 +5,7 @@ import "./App.css"
 
 //import { Redirect } from 'react-router';
 
+// sanity checks on username and password
 function validateCredentials(username, password) {
   const reUsername = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const rePassword = /(?=.{6,15})/;
@@ -18,6 +19,7 @@ function LoginForm(props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  // function to handle submit of login form - will interact with app and then with server
   const handleSubmit = (event) => {
     let valid = true;
     event.preventDefault();
