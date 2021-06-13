@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, ListGroup, Button } from "react-bootstrap";
+import { Form, ListGroup, Button, Badge } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import React from 'react';
@@ -54,8 +54,8 @@ function RightSide(props) {
                     <Col>
                         <Form.Group className="mb-3">
                             <Row>
-                                <Col sm="8">
-                                    <Form.Control placeholder="Enter username here..." />
+                                <Col sm="7">
+                                    <Form.Control placeholder="Enter username..." />
                                 </Col>
                                 <Col>
                                     <Button className="btn btn-md" variant="outline-primary" onClick={() => { }}>SUBMIT</Button>
@@ -76,8 +76,8 @@ function ClosedQuestion(props) {
     let answerRowList = [];
     let answer;
     let type = "";
-    let optional = "mandatory";
-    let multiple = "";
+    let optional;
+    let multiple;
 
     if (props.singleQuestion.max == 1) {
         // only single answer allowed --> radio button
@@ -88,9 +88,8 @@ function ClosedQuestion(props) {
         multiple = "multiple answers allowed";
     }
 
-    if (props.singleQuestion.min == 0) {
-        optional = "optional";
-    }
+    optional = props.singleQuestion.min;
+    multiple = props.singleQuestion.max;
 
     // build answers for single question
     for (let index in props.singleQuestion.answers) {
@@ -107,8 +106,8 @@ function ClosedQuestion(props) {
                     <Col></Col>
                     <Col></Col>
                     <Col >
-                        <span className="badge rounded-pill bg-info">{multiple}</span>
-                        <span className="badge rounded-pill bg-info">{optional}</span>
+                        <Badge pill variant="info">min = {optional}</Badge>
+                        <Badge pill variant="info">max = {multiple}</Badge>
                     </Col>
                 </Row>
             </ListGroup.Item>
@@ -134,7 +133,7 @@ function OpenQuestion(props) {
                     <Col></Col>
                     <Col></Col>
                     <Col >
-                        <span className="badge rounded-pill bg-info">{optional}</span>
+                        <Badge pill variant="info">{optional}</Badge>
                     </Col>
                 </Row>
             </ListGroup.Item>

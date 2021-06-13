@@ -1,7 +1,7 @@
 import { ListGroup } from 'react-bootstrap'
 import './App.css';
 import './LeftSide.css';
-import { Col, Row, Button } from "react-bootstrap"
+import { Col, Row, Button, Badge } from "react-bootstrap"
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -62,7 +62,7 @@ function SurveyRow(props) {
             <Col>{props.survey.title}</Col>
             <Col></Col>
             <Col>
-                <span className="badge rounded-pill bg-info">{numResponses}</span>
+                <Badge pill variant="info">{numResponses}</Badge>
             </Col>
         </Row>
     </ListGroup.Item>);

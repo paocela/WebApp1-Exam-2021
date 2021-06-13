@@ -29,8 +29,9 @@ let initSurveyList = [
       {
         question: "How are you?",
         answers: ["Good", "Tired", "Bored"],
+        numAnswers: 3,
         min: 0,
-        max: -1,
+        max: 1,
         responses: [
           {
             response: [0, 1, 0]
@@ -45,7 +46,7 @@ let initSurveyList = [
       },
       {
         question: "Describe your day?",
-        answers: ["I've been programming a web app all day!"],
+        answers: [""],
         min: 0,
         max: -1,
         responses: [
@@ -69,8 +70,9 @@ let initSurveyList = [
       {
         question: "Your favourite sport? (select 2)",
         answers: ["Golf", "Basketball", "Soccer", "Others..."],
+        numAnswers: 4,
         min: 0,
-        max: -1,
+        max: 3,
         responses: [
           {
             response: [1, 1, 0, 0]
@@ -85,7 +87,7 @@ let initSurveyList = [
       },
       {
         question: "Tell me a story",
-        answers: ["I don't know any stories"],
+        answers: [""],
         min: 1,
         max: -1,
         responses: [
@@ -108,7 +110,7 @@ let initSurveyList = [
     questions: [
       {
         question: "What's your name?",
-        answers: ["Paolo"],
+        answers: [""],
         min: 1,
         max: -1,
         responses: [
@@ -129,8 +131,9 @@ let initSurveyList = [
       {
         question: "What do you like to eat?",
         answers: ["Pasta", "Nutella", "Insalata"],
-        min: 1,
-        max: 1,
+        numAnswers: 3,
+        min: 0,
+        max: 2,
         responses: [
           {
             response: [0, 1, 0]
@@ -149,8 +152,9 @@ let initSurveyList = [
       {
         question: "What's your favourite color?",
         answers: ["Blue", "Red", "Orange", "Yellow", "Black"],
+        numAnswers: 5,
         min: 1,
-        max: 1,
+        max: 4,
         responses: [
           {
             response: [0, 1, 0, 1, 1]

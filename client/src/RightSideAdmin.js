@@ -103,9 +103,9 @@ function RightSideAdmin(props) {
                                 <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { calculateNextUser(0) }}>{switchUserLeft}</Button>
                             </Col>
                             <Col>
-                                <h2>
-                                    <span className="badge rounded-pill bg-primary">User: {props.currentSurvey.users[props.indexCurrentUser]}</span>
-                                </h2>
+                                <h4>
+                                    <Badge pill variant="primary">User: {props.currentSurvey.users[props.indexCurrentUser]}</Badge>
+                                </h4>
                             </Col>
                             <Col>
                                 <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { calculateNextUser(1) }}>{switchUserRight}</Button>
@@ -135,12 +135,10 @@ function ClosedQuestion(props) {
     } else {
         // multiple answers allowed --> checkbox button
         type = "checkbox";
-        multiple = "multiple answers allowed";
     }
 
-    if (props.singleQuestion.min == 0) {
-        optional = "optional";
-    }
+    optional = props.singleQuestion.min;
+    multiple = props.singleQuestion.max;
 
     // build answers for single question
     for (let index in props.singleQuestion.answers) {
@@ -159,8 +157,8 @@ function ClosedQuestion(props) {
                     <Col></Col>
                     <Col></Col>
                     <Col >
-                        <span className="badge rounded-pill bg-info">{multiple}</span>
-                        <span className="badge rounded-pill bg-info">{optional}</span>
+                        <Badge pill variant="info">min = {optional}</Badge>
+                        <Badge pill variant="info">max = {multiple}</Badge>
                     </Col>
                 </Row>
             </ListGroup.Item>
@@ -186,7 +184,7 @@ function OpenQuestion(props) {
                     <Col></Col>
                     <Col></Col>
                     <Col >
-                        <span className="badge rounded-pill bg-info">{optional}</span>
+                        <Badge pill variant="info">{optional}</Badge>
                     </Col>
                 </Row>
             </ListGroup.Item>
