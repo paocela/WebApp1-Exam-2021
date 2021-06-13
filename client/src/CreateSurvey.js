@@ -5,6 +5,7 @@ import { Col, Row, Button, Form, Badge } from "react-bootstrap"
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import React from 'react';
+import { arrowUp, arrowDown } from './Icons.js'
 
 /*
 questions: [
@@ -82,10 +83,38 @@ function CreateRightSide(props) {
         singleQuestion = props.questionList[index];
         if (singleQuestion.max == -1) {
             // open question
-            questions.push(<div><OpenQuestion singleQuestion={singleQuestion} setQuestionList={props.setQuestionList} questionList={props.questionList} index={index} /><br /></div>)
+            questions.push(<div>
+                <Row>
+                    <Col sm={11}>
+                        <OpenQuestion singleQuestion={singleQuestion} setQuestionList={props.setQuestionList} questionList={props.questionList} index={index} /><br />
+                    </Col>
+                    <Col sm={1}>
+                        <Row>
+                            <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { }}>{arrowUp}</Button>
+                        </Row>
+                        <Row>
+                            <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { }}>{arrowDown}</Button>
+                        </Row>
+                    </Col>
+                </Row>
+            </div>)
         } else {
             // closed question
-            questions.push(<div><ClosedQuestion singleQuestion={singleQuestion} setQuestionList={props.setQuestionList} questionList={props.questionList} index={index} /><br /></div>)
+            questions.push(<div>
+                <Row>
+                    <Col sm={11}>
+                        <ClosedQuestion singleQuestion={singleQuestion} setQuestionList={props.setQuestionList} questionList={props.questionList} index={index} /><br />
+                    </Col>
+                    <Col sm={1}>
+                        <Row>
+                            <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { }}>{arrowUp}</Button>
+                        </Row>
+                        <Row>
+                            <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { }}>{arrowDown}</Button>
+                        </Row>
+                    </Col>
+                </Row>
+            </div>)
         }
     }
     // Form.Group "Enter username here..." textbox: position to the rigth of the container
@@ -93,16 +122,20 @@ function CreateRightSide(props) {
         <React.Fragment>
             <Col sm={8} className="below-nav vheight-100">
                 <Row>
-                    <Col>
+                    <Col sm={9}>
                         <Row>
-                            <Col className="form-element">Survey Title</Col>
-                            <Col><Form.Control onChange={handleSurveyTitle} size="md" placeholder="..." /></Col>
+                            <Col className="form-element" sm={3} className="form-element">
+                                <h3>
+                                    Survey Title
+                                </h3>
+                            </Col>
+                            <Col sm={8}><Form.Control onChange={handleSurveyTitle} size="md" placeholder="..." /></Col>
+                            <Col sm={1}></Col>
                         </Row>
                     </Col>
-                    <Col></Col>
-                    <Col>
+                    <Col sm={3}>
                         <Form.Group className="mb-3">
-                            <Button className="btn btn-md" variant="outline-primary" onClick={() => { }}>SUBMIT</Button>
+                            <Button className="btn btn-new-survey btn-md btn-block" variant="outline-primary" onClick={() => { }}>SUBMIT</Button>
                         </Form.Group>
                     </Col>
                 </Row>
@@ -119,9 +152,9 @@ function ClosedQuestion(props) {
     let answer;
     let singleQuestion;
 
-    let handleQuestionAnswers = (event, i) => {
-        let temp = props.questionList;
-        if(i > temp[props.index].answer.length) {
+    let handleQuestionAnswers = i => (event) => {
+        let temp = [...props.questionList];
+        if (temp[props.index].answers.length == 0 || i > temp[props.index].answers.length) {
             temp[props.index].answers.push(event.target.value);
         } else {
             temp[props.index].answers[i] = event.target.value;
@@ -129,18 +162,17 @@ function ClosedQuestion(props) {
         props.setQuestionList(temp);
     }
 
-    let handleQuestionTitle = (event) => {
-        let temp = props.questionList;
+    const handleQuestionTitle = (event) => {
+        let temp = [...props.questionList];
         temp[props.index].question = event.target.value;
         props.setQuestionList(temp);
     }
 
     console.log(props.singleQuestion.numberAnswers)
     for (let i = 0; i < props.singleQuestion.numberAnswers; i++) {
-
         answerRowList.push(<ListGroup.Item as="li">
             <Row>
-                <Col sm={2}>Answer {i}:</Col>
+                <Col className="form-element" sm={2}>Answer {i}:</Col>
                 <Col sm={10}>
                     <Form.Control size="md" onChange={handleQuestionAnswers(i)} placeholder="..." />
                 </Col>
@@ -152,7 +184,7 @@ function ClosedQuestion(props) {
         <ListGroup as="ul">
             <ListGroup.Item as="li" variant="secondary">
                 <Row>
-                    <Col sm={2}>Question:</Col>
+                    <Col className="form-element" sm={2}>Question {props.index}:</Col>
                     <Col sm={10}>
                         <Form.Control size="md" onChange={handleQuestionTitle} placeholder="..." />
                     </Col>
@@ -168,6 +200,12 @@ function ClosedQuestion(props) {
 function OpenQuestion(props) {
     let optional = "mandatory";
 
+    const handleQuestionTitle = (event) => {
+        let temp = [...props.questionList];
+        temp[props.index].question = event.target.value;
+        props.setQuestionList(temp);
+    }
+
     if (props.singleQuestion.min == 0) {
         optional = "optional";
     }
@@ -176,9 +214,9 @@ function OpenQuestion(props) {
         <ListGroup as="ul">
             <ListGroup.Item as="li" variant="secondary">
                 <Row>
-                    <Col sm={2}>Question:</Col>
+                    <Col sm={2}>Question {props.index}:</Col>
                     <Col sm={10}>
-                        <Form.Control size="md" placeholder="..." />
+                        <Form.Control onChange={handleQuestionTitle} size="md" placeholder="..." />
                     </Col>
                 </Row>
             </ListGroup.Item>
