@@ -5,7 +5,7 @@ import { Col, Row, Button, Form, Badge } from "react-bootstrap"
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import React from 'react';
-import { arrowUp, arrowDown } from './Icons.js'
+import { arrowUp, arrowDown, deleteIcon } from './Icons.js'
 
 /*
 questions: [
@@ -76,6 +76,45 @@ function CreateRightSide(props) {
 
     let handleSurveyTitle = (event) => (props.setSurveyTitle(event.target.value));
 
+    let swapQuestions = (verse, index) => {
+        let temp;
+        let list;
+        list = [...props.questionList];
+        index = parseInt(index);
+
+
+        // swap with above
+        if (verse == 0) {
+            if (index - 1 < 0) {
+                return;
+            } else {
+                temp = list[index - 1];
+                list[index - 1] = list[index];
+                list[index] = temp;
+                props.setQuestionList(list);
+            }
+        } else {
+            // swap with below
+            if (index + 1 >= props.questionList.length) {
+                return;
+            } else {
+                temp = list[index + 1];
+                list[index + 1] = list[index];
+                list[index] = temp;
+                props.setQuestionList(list);
+            }
+        }
+    }
+
+    let deleteQuestion = (index) => {
+        let list;
+        list = [...props.questionList];
+
+        // remove 1 element/s starting from index element
+        list.splice(index, 1);
+        props.setQuestionList(list);
+    }
+
     // TODO center words / style title
 
     // build questions
@@ -90,11 +129,15 @@ function CreateRightSide(props) {
                     </Col>
                     <Col sm={1}>
                         <Row>
-                            <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { }}>{arrowUp}</Button>
+                            <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { swapQuestions(0, index) }}>{arrowUp}</Button>
                         </Row>
                         <Row>
-                            <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { }}>{arrowDown}</Button>
+                            <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { swapQuestions(1, index) }}>{arrowDown}</Button>
                         </Row>
+                        <Row>
+                            <Button className="btn btn-md switch-user-left" variant="outline-danger" onClick={() => { deleteQuestion(index) }}>{deleteIcon}</Button>
+                        </Row>
+                        <br/>
                     </Col>
                 </Row>
             </div>)
@@ -107,12 +150,16 @@ function CreateRightSide(props) {
                     </Col>
                     <Col sm={1}>
                         <Row>
-                            <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { }}>{arrowUp}</Button>
+                            <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { swapQuestions(0, index) }}>{arrowUp}</Button>
                         </Row>
                         <Row>
-                            <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { }}>{arrowDown}</Button>
+                            <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { swapQuestions(1, index) }}>{arrowDown}</Button>
+                        </Row>
+                        <Row>
+                            <Button className="btn btn-md switch-user-left" variant="outline-danger" onClick={() => { deleteQuestion(index) }}>{deleteIcon}</Button>
                         </Row>
                     </Col>
+                    
                 </Row>
             </div>)
         }
@@ -154,11 +201,7 @@ function ClosedQuestion(props) {
 
     let handleQuestionAnswers = i => (event) => {
         let temp = [...props.questionList];
-        if (temp[props.index].answers.length == 0 || i > temp[props.index].answers.length) {
-            temp[props.index].answers.push(event.target.value);
-        } else {
-            temp[props.index].answers[i] = event.target.value;
-        }
+        temp[props.index].answers[i] = event.target.value;
         props.setQuestionList(temp);
     }
 
@@ -168,13 +211,12 @@ function ClosedQuestion(props) {
         props.setQuestionList(temp);
     }
 
-    console.log(props.singleQuestion.numberAnswers)
     for (let i = 0; i < props.singleQuestion.numberAnswers; i++) {
         answerRowList.push(<ListGroup.Item as="li">
             <Row>
                 <Col className="form-element" sm={2}>Answer {i}:</Col>
                 <Col sm={10}>
-                    <Form.Control size="md" onChange={handleQuestionAnswers(i)} placeholder="..." />
+                    <Form.Control size="md" onChange={handleQuestionAnswers(i)} value={props.singleQuestion.answers[i]} placeholder="..." />
                 </Col>
             </Row>
         </ListGroup.Item>);
@@ -186,7 +228,7 @@ function ClosedQuestion(props) {
                 <Row>
                     <Col className="form-element" sm={2}>Question {props.index}:</Col>
                     <Col sm={10}>
-                        <Form.Control size="md" onChange={handleQuestionTitle} placeholder="..." />
+                        <Form.Control size="md" onChange={handleQuestionTitle} value={props.singleQuestion.question} placeholder="..." />
                     </Col>
                 </Row>
             </ListGroup.Item>
@@ -216,7 +258,7 @@ function OpenQuestion(props) {
                 <Row>
                     <Col sm={2}>Question {props.index}:</Col>
                     <Col sm={10}>
-                        <Form.Control onChange={handleQuestionTitle} size="md" placeholder="..." />
+                        <Form.Control onChange={handleQuestionTitle} value={props.singleQuestion.question} size="md" placeholder="..." />
                     </Col>
                 </Row>
             </ListGroup.Item>
@@ -247,8 +289,6 @@ function CreateLeftSide(props) {
 
             // TODO check input and display error with message
             if (props.minClosed == "" || props.maxClosed == "" || props.numberAnswers == "") {
-                console.log(props.minClosed)
-                console.log(props.maxClosed)
                 setErrorMessageClosed("Input cannot be NULL");
                 return;
             }
@@ -272,6 +312,11 @@ function CreateLeftSide(props) {
                 max: props.maxClosed,
                 responses: []
             };
+
+            // initialize answers to avoid problems in inserting 3rd answer before 1st
+            for(let i = 0; i < question.numberAnswers; i++) {
+                question.answers.push("");
+            }
 
             props.setQuestionList((l) => ([...l, question]));
 
