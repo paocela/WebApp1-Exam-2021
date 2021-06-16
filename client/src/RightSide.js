@@ -1,10 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, ListGroup, Button, Badge } from "react-bootstrap";
+import { Form, ListGroup, Button, Badge, InputGroup } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import React from 'react';
 import Col from "react-bootstrap/Col"
 import Row from "react-bootstrap/Row"
+import { useState } from 'react';
+
 
 /*
   {
@@ -24,19 +26,36 @@ import Row from "react-bootstrap/Row"
   }
 */
 
+/*
+response = [
+    [1, 0, 1, 0],
+    ["ciao"],
+    ["response"],
+    ...
+]
+*/
+
 
 function RightSide(props) {
     let questions = [];
     let singleQuestion;
+    let [userName, setUserName] = useState("");
+
+
+
     // build questions
     for (let index in props.currentSurvey.questions) {
         singleQuestion = props.currentSurvey.questions[index];
         if (singleQuestion.answers.length == 1) {
             // open question
-            questions.push(<div><OpenQuestion singleQuestion={singleQuestion} /><br /></div>)
+            questions.push(<div><OpenQuestion singleQuestion={singleQuestion} responses={props.responses} setResponses={props.setResponses} index={index} /><br /></div>)
         } else if (singleQuestion.answers.length >= 2) {
             // closed question
-            questions.push(<div><ClosedQuestion singleQuestion={singleQuestion} /><br /></div>)
+            let elem = [];
+            for(let i = 0; i < singleQuestion.answers.length; i++) {
+                elem.push(0);
+            }
+            questions.push(<div><ClosedQuestion singleQuestion={singleQuestion} responses={props.responses} setResponses={props.setResponses} index={index} /><br /></div>)
 
         } else {
             // PANIC
@@ -55,7 +74,7 @@ function RightSide(props) {
                         <Form.Group className="mb-3">
                             <Row>
                                 <Col sm="7">
-                                    <Form.Control placeholder="Enter username..." />
+                                    <Form.Control placeholder="Enter username..." onChange={(event) => (setUserName(event.target.value))} />
                                 </Col>
                                 <Col>
                                     <Button className="btn btn-md" variant="outline-primary" onClick={() => { }}>SUBMIT</Button>
@@ -79,13 +98,16 @@ function ClosedQuestion(props) {
     let optional;
     let multiple;
 
-    if (props.singleQuestion.max == 1) {
-        // only single answer allowed --> radio button
-        type = "radio";
-    } else {
-        // multiple answers allowed --> checkbox button
-        type = "checkbox";
-        multiple = "multiple answers allowed";
+    const handleResponseClosed = answerIndex => (event) => {
+        let a = [...props.responses];
+        if(a[props.index] == undefined) {
+            a[props.index] = [];
+            for(let i = 0; i < props.singleQuestion.answers.length; i++) {
+                a[props.index].push(false);
+            }
+        }
+        a[props.index][answerIndex] = !a[props.index][answerIndex];
+        props.setResponses(a);
     }
 
     optional = props.singleQuestion.min;
@@ -94,8 +116,9 @@ function ClosedQuestion(props) {
     // build answers for single question
     for (let index in props.singleQuestion.answers) {
         answer = props.singleQuestion.answers[index];
+        console.log(props.responses[props.index])
         // TODO: fix radio buttons (don't force single option and don't allow to deselect, for optional case)
-        answerRowList.push(<ListGroup.Item as="li"><Form.Check type={type} label={answer} id={answer} /></ListGroup.Item>);
+        answerRowList.push(<ListGroup.Item ><Form.Check type={"checkbox"} label={answer} id={answer} onChange={handleResponseClosed(index)} checked={props.responses[props.index] == undefined ? false : props.responses[props.index][index]} /></ListGroup.Item>);
     }
 
     return (
@@ -121,6 +144,13 @@ function ClosedQuestion(props) {
 function OpenQuestion(props) {
     let optional = "mandatory";
 
+    const handleResponseOpen = (event) => {
+        let a = [...props.responses];
+        
+        a[props.index] = event.target.value;
+        props.setResponses(a);
+    }
+
     if (props.singleQuestion.min == 0) {
         optional = "optional";
     }
@@ -138,7 +168,7 @@ function OpenQuestion(props) {
                 </Row>
             </ListGroup.Item>
             <ListGroup.Item as="li">
-                <Form.Control as="textarea" rows={3} placeholder="Enter answer here..." />
+                <Form.Control as="textarea" rows={3} placeholder="Enter answer here..." onChange={handleResponseOpen} value={props.responses[props.index] == undefined ? "" : props.responses[props.index]} />
             </ListGroup.Item>
         </ListGroup>
     );

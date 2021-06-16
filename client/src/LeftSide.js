@@ -14,9 +14,9 @@ function LeftSide(props) {
             <h4 class="leftSide-title">Survey List</h4>
             <ListGroup variant="flush" className="trans">
                 {props.surveyList.map(
-                    (x) => {
+                    (x, index) => {
 
-                        return (<SurveyRow survey={x} currentSurvey={props.currentSurvey} setCurrentSurvey={props.setCurrentSurvey} key={x} admin={props.admin} setIndexCurrentUser={props.setIndexCurrentUser} />)
+                        return (<SurveyRow setCurrentSurveyIndex={props.setCurrentSurveyIndex} index={index} survey={x} currentSurvey={props.currentSurvey} setCurrentSurvey={props.setCurrentSurvey} key={x} admin={props.admin} setIndexCurrentUser={props.setIndexCurrentUser} setResponses={props.setResponses}/>)
                     })
                 }
                 <ListGroup.Item className="bg-transparent">
@@ -52,7 +52,11 @@ function SurveyRow(props) {
 
     // onClick allows to properly select a different element and switch among surveys
     return (<ListGroup.Item onClick={() => {
+        props.setCurrentSurveyIndex(props.index);
         props.setCurrentSurvey(props.survey);
+        if(!props.admin) {
+            props.setResponses([]);
+        }
         if (props.survey.users.length == 0) {
             props.setIndexCurrentUser(null);
         }

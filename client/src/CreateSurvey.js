@@ -65,7 +65,7 @@ function CreateSurvey(props) {
     return (
         <React.Fragment>
             <CreateLeftSide setQuestionList={setQuestionList} setOptionalOpen={setOptionalOpen} optionalOpen={optionalOpen} setMinClosed={setMinClosed} minClosed={minClosed} setNumberAnswers={setNumberAnswers} numberAnswers={numberAnswers} setMaxClosed={setMaxClosed} maxClosed={maxClosed} />
-            <CreateRightSide questionList={questionList} setQuestionList={setQuestionList} setSurveyTitle={setSurveyTitle} />
+            <CreateRightSide questionList={questionList} setQuestionList={setQuestionList} setSurveyTitle={setSurveyTitle} surveyTitle={surveyTitle} />
         </React.Fragment>
     );
 }
@@ -176,7 +176,7 @@ function CreateRightSide(props) {
                                     Survey Title
                                 </h3>
                             </Col>
-                            <Col sm={8}><Form.Control onChange={handleSurveyTitle} size="md" placeholder="..." /></Col>
+                            <Col sm={8}><Form.Control onChange={handleSurveyTitle} value={props.surveyTitle} size="md" placeholder="..." /></Col>
                             <Col sm={1}></Col>
                         </Row>
                     </Col>

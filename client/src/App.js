@@ -184,7 +184,10 @@ function App() {
   const [message, setMessage] = useState('');
   const [surveyList, setSurveyList] = useState(initSurveyList);
   const [currentSurvey, setCurrentSurvey] = useState(initSurveyList[0])
+  const [currentSurveyIndex, setCurrentSurveyIndex] = useState(0);
   const [indexCurrentUser, setIndexCurrentUser] = useState(currentSurvey.users.length == 0 ? null : 0)
+  const [responses, setResponses] = useState([]); // response of a survey, used in right side
+
 
 
   // functions to handle login and logout - interact with server
@@ -254,8 +257,8 @@ function App() {
             <Container fluid>
               <NavBar title="Survey Manager" doLogOut={doLogOut} />
               <Row>
-                <LeftSide surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={false} setIndexCurrentUser={setIndexCurrentUser} />
-                <RightSide currentSurvey={currentSurvey} admin={true} />
+                <LeftSide setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={false} setIndexCurrentUser={setIndexCurrentUser} setResponses={setResponses}/>
+                <RightSide currentSurvey={currentSurvey} currentSurveyIndex={currentSurveyIndex} surveyList={surveyList} surveyList={surveyList} responses={responses} setResponses={setResponses} />
               </Row>
             </Container>
           </>
@@ -265,7 +268,7 @@ function App() {
           <>
             <NavBar title="Survey Manager - Admin" doLogOut={doLogOut} />
             <Row>
-              <LeftSide surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={true} setIndexCurrentUser={setIndexCurrentUser} />
+              <LeftSide setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={true} setIndexCurrentUser={setIndexCurrentUser} />
               <RightSideAdmin currentSurvey={currentSurvey} indexCurrentUser={indexCurrentUser} setIndexCurrentUser={setIndexCurrentUser} />
             </Row>
 
