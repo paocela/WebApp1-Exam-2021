@@ -4,7 +4,7 @@ const express = require('express');
 const morgan = require('morgan'); // logging middleware
 const { check, validationResult } = require('express-validator'); // validation middleware
 const dao = require('./dao'); // module for accessing the DB
-// const userDao = require('./userDao'); // module for accessing the DB for users
+const adminDao = require('./adminDao'); // module for accessing the DB for users
 const passport = require('passport'); // auth middleware
 const LocalStrategy = require('passport-local').Strategy; // username and password for login
 const session = require('express-session'); // enable sessions
@@ -14,7 +14,7 @@ const session = require('express-session'); // enable sessions
 // by setting a function to verify username and password
 passport.use(new LocalStrategy(
   function (username, password, done) {
-    userDao.getUser(username, password).then((user) => {
+    adminDao.getAdmin(username, password).then((user) => {
       if (!user)
         return done(null, false, { message: 'Incorrect username and/or password.' });
 
@@ -31,9 +31,9 @@ passport.serializeUser((user, done) => {
 
 // starting from the data in the session, we extract the current (logged-in) user
 passport.deserializeUser((id, done) => {
-  userDao.getUserById(id)
-    .then(user => {
-      done(null, user); // this will be available in req.user
+  adminDao.getAdminById(id)
+    .then(admin => {
+      done(null, admin); // this will be available in req.user
     }).catch(err => {
       done(err, null);
     });
@@ -175,7 +175,7 @@ app.post('/api/surveys', isLoggedIn, async (req, res) => {
 
 // POST api/login 
 // login
-app.post('/API/login', function (req, res, next) {
+app.post('/api/login', function (req, res, next) {
   passport.authenticate('local', (err, user, info) => {
     if (err)
       return next(err);
@@ -189,7 +189,6 @@ app.post('/API/login', function (req, res, next) {
         return next(err);
 
       // req.user contains the authenticated user, we send all the user info back
-      // this is coming from userDao.getUser()
       return res.json(req.user);
     });
   })(req, res, next);
@@ -199,14 +198,14 @@ app.post('/API/login', function (req, res, next) {
 
 // DELETE api/login/current 
 // logout
-app.delete('/API/login/current', (req, res) => {
+app.delete('/api/login/current', (req, res) => {
   req.logout();
   res.end();
 });
 
 // GET api/login/current
 // check whether the user is logged in or not
-app.get('/API/login/current', (req, res) => {
+app.get('/api/login/current', (req, res) => {
   if (req.isAuthenticated()) {
     res.status(200).json(req.user);
   }

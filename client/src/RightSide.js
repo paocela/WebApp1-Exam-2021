@@ -44,8 +44,8 @@ function RightSide(props) {
 
 
     // build questions
-    for (let index in props.currentSurvey.questions) {
-        singleQuestion = props.currentSurvey.questions[index];
+    for (let index in props.currentSurvey.QuestionsAndAnswers) {
+        singleQuestion = props.currentSurvey.QuestionsAndAnswers[index];
         if (singleQuestion.answers.length == 1) {
             // open question
             questions.push(<div><OpenQuestion singleQuestion={singleQuestion} responses={props.responses} setResponses={props.setResponses} index={index} /><br /></div>)
@@ -67,7 +67,7 @@ function RightSide(props) {
             <Col sm={8} className="below-nav vheight-100">
                 <Row>
                     <Col>
-                        <h2>{props.currentSurvey.title}</h2>
+                        <h2>{props.currentSurvey.Title}</h2>
                     </Col>
                     <Col></Col>
                     <Col>
@@ -116,7 +116,6 @@ function ClosedQuestion(props) {
     // build answers for single question
     for (let index in props.singleQuestion.answers) {
         answer = props.singleQuestion.answers[index];
-        console.log(props.responses[props.index])
         // TODO: fix radio buttons (don't force single option and don't allow to deselect, for optional case)
         answerRowList.push(<ListGroup.Item ><Form.Check type={"checkbox"} label={answer} id={answer} onChange={handleResponseClosed(index)} checked={props.responses[props.index] == undefined ? false : props.responses[props.index][index]} /></ListGroup.Item>);
     }

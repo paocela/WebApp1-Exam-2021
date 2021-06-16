@@ -40,13 +40,12 @@ function SurveyRow(props) {
 
     // differentiate among leftSide for user and for admin
     if (props.admin) {
-        console.log(props.currentSurvey)
+        // TODO
         numResponses = props.survey.users.length;
-        console.log(numResponses)
     }
 
     // select currect active list element
-    if (props.currentSurvey.title === props.survey.title) {
+    if (props.currentSurvey.Title === props.survey.Title) {
         active = true;
     }
 
@@ -57,13 +56,11 @@ function SurveyRow(props) {
         if(!props.admin) {
             props.setResponses([]);
         }
-        if (props.survey.users.length == 0) {
-            props.setIndexCurrentUser(null);
-        }
+        
         props.setIndexCurrentUser(0);
     }} action active={active} className="leftButton bg-transparent">
         <Row>
-            <Col>{props.survey.title}</Col>
+            <Col>{props.survey.Title}</Col>
             <Col></Col>
             <Col>
                 <Badge pill variant="info">{numResponses}</Badge>
