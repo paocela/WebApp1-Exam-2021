@@ -20,7 +20,7 @@ exports.getAdminById = (id) => {
           resolve({error: 'Admin not found.'});
         else {
           // by default, the local strategy looks for "username": not to create confusion in server.js, we can create an object with that property
-          const admin = {id: row.id, username: row.Email}
+          const admin = {id: row.Id, username: row.Email}
           resolve(user);
         }
     });
@@ -37,12 +37,13 @@ exports.getAdmin = (email, password) => {
           resolve(false);
         }
         else {
-          const admin = {id: row.id, username: row.Email};
+          const admin = {id: row.Id, username: row.Email};
             
           // check the hashes with an async call, given that the operation may be CPU-intensive (and we don't want to block the server)
           bcrypt.compare(password, row.hash).then(result => {
-            if(result)
+            if(result){
               resolve(admin);
+            }
             else
               resolve(false);
           });

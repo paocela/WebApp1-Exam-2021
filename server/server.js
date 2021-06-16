@@ -17,7 +17,6 @@ passport.use(new LocalStrategy(
     adminDao.getAdmin(username, password).then((user) => {
       if (!user)
         return done(null, false, { message: 'Incorrect username and/or password.' });
-
       return done(null, user);
     })
   }
@@ -26,7 +25,7 @@ passport.use(new LocalStrategy(
 // serialize and de-serialize the user (user object <-> session)
 // we serialize the user id and we store it in the session: the session is very small in this way
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user.Id);
 });
 
 // starting from the data in the session, we extract the current (logged-in) user
@@ -84,7 +83,7 @@ app.get('/api/surveys', async (req, res) => {
 
 // GET /api/surveysAdmin
 // Retrieve all available surveys - called for a regular user
-app.get('/api/surveysAdmin', isLoggedIn, async (req, res) => {
+app.get('/api/surveysAdmin', /*isLoggedIn,*/ async (req, res) => {
   dao.getListSurveysAdmin(req.user.id)
     .then((surveys) => { res.json(surveys); })
     .catch((error) => { res.status(500).json(error); });
@@ -92,7 +91,7 @@ app.get('/api/surveysAdmin', isLoggedIn, async (req, res) => {
 
 // GET /api/surveys/<surveyId>
 // get responses for a given survey (identified with surveyId <surveyId>)
-app.get('/api/surveysAdmin/:surveyId', isLoggedIn, async (req, res) => {
+app.get('/api/surveysAdmin/:surveyId', /*isLoggedIn,*/ async (req, res) => {
   try {
     const responses = await dao.getResponses(req.params.surveyId);
     if (responses.error) {
@@ -130,6 +129,7 @@ app.post('/api/surveys/:surveyId', async (req, res) => {
       Username: req.body.username,
       Response: JSON.stringify(req.body.response) 
   }
+  console.log(response);
   try {
     await dao.addResponse(response)
     res.status(200).end();

@@ -57,8 +57,8 @@ function RightSideAdmin(props) {
     let singleQuestion;
 
     // build questions
-    for (let index in props.currentSurvey.questions) {
-        singleQuestion = props.currentSurvey.questions[index];
+    for (let index in props.currentSurvey.QuestionsAndAnswers) {
+        singleQuestion = props.currentSurvey.QuestionsAndAnswers[index];
         if (singleQuestion.answers.length == 1) {
             // open question
             questions.push(<div><OpenQuestion singleQuestion={singleQuestion} indexCurrentUser={props.indexCurrentUser} /><br /></div>)
@@ -76,13 +76,13 @@ function RightSideAdmin(props) {
         if (flag == 0) {
             // decrement index - move left
             if (props.indexCurrentUser - 1 < 0) {
-                props.setIndexCurrentUser(props.currentSurvey.users.length - 1);
+                props.setIndexCurrentUser(props.currentSurvey.Users.length - 1);
             } else {
                 props.setIndexCurrentUser((i) => i - 1);
             }
         } else {
             // increment index - move right
-            if (props.indexCurrentUser + 1 >= props.currentSurvey.users.length) {
+            if (props.indexCurrentUser + 1 >= props.currentSurvey.Users.length) {
                 props.setIndexCurrentUser(0);
             } else {
                 props.setIndexCurrentUser((i) => i + 1);
@@ -104,7 +104,7 @@ function RightSideAdmin(props) {
                             </Col>
                             <Col>
                                 <h4>
-                                    <Badge pill variant="primary">User: {props.currentSurvey.users[props.indexCurrentUser]}</Badge>
+                                    <Badge pill variant="primary">User: {props.currentSurvey.Users[props.indexCurrentUser]}</Badge>
                                 </h4>
                             </Col>
                             <Col>
@@ -145,7 +145,7 @@ function ClosedQuestion(props) {
         answer = props.singleQuestion.answers[index];
         // TODO: fix radio buttons (don't force single option and don't allow to deselect, for optional case)
         answerRowList.push(<ListGroup.Item as="li">
-            <Form.Check type={type} checked={props.singleQuestion.responses[props.indexCurrentUser].response[index]} label={answer} id={answer} />
+            <Form.Check type={type} checked={props.singleQuestion.Responses[props.indexCurrentUser][index]} label={answer} id={answer} />
         </ListGroup.Item>);
     }
 
@@ -189,7 +189,7 @@ function OpenQuestion(props) {
                 </Row>
             </ListGroup.Item>
             <ListGroup.Item as="li">
-                <Form.Control as="textarea" plaintext readOnly value={props.singleQuestion.responses[props.indexCurrentUser].response[0]} />
+                <Form.Control as="textarea" plaintext readOnly value={props.singleQuestion.Responses[props.indexCurrentUser][0]} />
             </ListGroup.Item>
         </ListGroup>
     );

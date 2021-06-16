@@ -5,7 +5,7 @@ import './App.css';
 import React from 'react';
 import Col from "react-bootstrap/Col"
 import Row from "react-bootstrap/Row"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 /*
@@ -41,7 +41,45 @@ function RightSide(props) {
     let singleQuestion;
     let [userName, setUserName] = useState("");
 
+    const [addResponseTrigger, setAddResponseTrigger] = useState();
+    const [isLoaded, setIsLoaded] = useState(false)
 
+    useEffect(() => {
+        const postResponse = async () => {
+            const response = await fetch('/api/surveys/' + addResponseTrigger.surveyId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(addResponseTrigger)
+            });
+            if(response.status == 500) {
+                console.log(response.err);
+            }
+        }
+        if (isLoaded) {
+            postResponse();
+            setUserName("");
+            props.setResponses([]);
+        } else {
+            setIsLoaded((x) =>!x);
+        }
+    }, [addResponseTrigger]);
+
+    // function called when sumbitting responses
+    function checkFieldsAndSubmit() {
+        // TODO sanity checks
+
+        // in props.responses = array of responses([], [], ...)
+        let response = {
+            surveyId: props.currentSurvey.Id,
+            username: userName,
+            response: props.responses
+        }
+
+        setAddResponseTrigger(response);
+
+    }
 
     // build questions
     for (let index in props.currentSurvey.QuestionsAndAnswers) {
@@ -74,10 +112,10 @@ function RightSide(props) {
                         <Form.Group className="mb-3">
                             <Row>
                                 <Col sm="7">
-                                    <Form.Control placeholder="Enter username..." onChange={(event) => (setUserName(event.target.value))} />
+                                    <Form.Control placeholder="Enter username..." onChange={(event) => (setUserName(event.target.value))} value={userName} />
                                 </Col>
                                 <Col>
-                                    <Button className="btn btn-md" variant="outline-primary" onClick={() => { }}>SUBMIT</Button>
+                                    <Button className="btn btn-md" variant="outline-primary" onClick={checkFieldsAndSubmit}>SUBMIT</Button>
                                 </Col>
                             </Row>
                         </Form.Group>

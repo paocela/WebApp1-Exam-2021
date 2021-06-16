@@ -276,7 +276,7 @@ let initSurveyList = [
 
 function App() {
   // global useState for handling of users, surveys and admins
-  const [loggedIn, setLoggedIn] = useState(true); // TODO set to false when completed
+  const [loggedIn, setLoggedIn] = useState(false); // TODO set to false when completed
   const [errorMessage, setErrorMessage] = useState('');
   const [message, setMessage] = useState('');
   const [surveyList, setSurveyList] = useState([]);
@@ -287,7 +287,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchAll = async (x) => {
+    const fetchAllUser = async (x) => {
         const response = await fetch('/api/surveys');
         const responseBody = await response.json();
         const res = [...responseBody]
@@ -296,9 +296,47 @@ function App() {
         setIndexCurrentUser(currentSurvey.users == undefined ? null : 0);
         setLoading(false);
     }
-    fetchAll();
+    const fetchAllAdmin = async (x) => {
+      const response = await fetch('/api/surveysAdmin');
+      const responseBody = await response.json();
+      const res = responseBody;
+      console.log(responseBody)
+      console.log(res)
+      setSurveyList(res);
+      setCurrentSurvey(res[0]);
+      setIndexCurrentUser(currentSurvey.users == undefined ? null : 0);
+      setLoading(false);
+  }
+  if(loggedIn) {
+    fetchAllAdmin();
+  } else {
+    fetchAllUser();
+  }
   
-}, []);
+}, [loggedIn]);
+
+
+useEffect(() => {
+  const fetchAll = async (x) => {
+      const response = await fetch('/api/surveysAdmin/' + currentSurvey.Id);
+      const responseBody = await response.json();
+      const res = [...responseBody]
+      let temp = [...surveyList];
+      for(let index in res.responses) {
+        
+        temp[currentSurvey.Id]["Users"].push(res.users[index]);
+        for(let questionIndex in surveyList[currentSurvey.Id].QuestionAndAnswers) {
+          temp[currentSurvey.Id].QuestionAndAnswers[questionIndex]["Responses"].push(res.responses[index]);
+        }
+      }
+      setSurveyList(temp);
+  }
+  if(loggedIn) {
+    fetchAll();
+  }
+
+
+}, [currentSurvey]);
 
   // functions to handle login and logout - interact with server
   const doLogIn = async (credentials) => {
