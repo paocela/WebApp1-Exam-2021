@@ -59,7 +59,7 @@ function RightSideAdmin(props) {
     // build questions
     for (let index in props.currentSurvey.QuestionsAndAnswers) {
         singleQuestion = props.currentSurvey.QuestionsAndAnswers[index];
-        if (singleQuestion.answers.length == 1) {
+        if (singleQuestion.answers.length == 1 && singleQuestion.answers[0] == "") {
             // open question
             questions.push(<div><OpenQuestion singleQuestion={singleQuestion} indexCurrentUser={props.indexCurrentUser} /><br /></div>)
         } else if (singleQuestion.answers.length >= 2) {
@@ -139,13 +139,13 @@ function ClosedQuestion(props) {
 
     optional = props.singleQuestion.min;
     multiple = props.singleQuestion.max;
-
+    console.log(props.singleQuestion)
     // build answers for single question
     for (let index in props.singleQuestion.answers) {
         answer = props.singleQuestion.answers[index];
         // TODO: fix radio buttons (don't force single option and don't allow to deselect, for optional case)
         answerRowList.push(<ListGroup.Item as="li">
-            <Form.Check type={type} checked={props.singleQuestion.Responses[props.indexCurrentUser][index]} label={answer} id={answer} />
+            <Form.Check type={type} checked={props.singleQuestion.responses[props.indexCurrentUser].response[index]} label={answer} id={answer} />
         </ListGroup.Item>);
     }
 
@@ -189,7 +189,7 @@ function OpenQuestion(props) {
                 </Row>
             </ListGroup.Item>
             <ListGroup.Item as="li">
-                <Form.Control as="textarea" plaintext readOnly value={props.singleQuestion.Responses[props.indexCurrentUser][0]} />
+                <Form.Control as="textarea" plaintext readOnly value={props.singleQuestion.responses[props.indexCurrentUser].response == null ? "" : props.singleQuestion.responses[props.indexCurrentUser].response} />
             </ListGroup.Item>
         </ListGroup>
     );

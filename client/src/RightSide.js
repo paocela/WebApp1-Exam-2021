@@ -39,8 +39,12 @@ response = [
 function RightSide(props) {
     let questions = [];
     let singleQuestion;
-    let [userName, setUserName] = useState("");
-
+    const [userName, setUserName] = useState("");
+    const [errorMessageUsername, setErrorMessageUsername] = useState("");
+    const [errorMessageClosed, setErrorMessageClosed] = useState("");
+    const [errorMessageOpen, setErrorMessageOpen] = useState("");
+    const [validationMessage, setValidationMessage] = useState("")
+    const [messageColor, setMessageColor] = useState("");
     const [addResponseTrigger, setAddResponseTrigger] = useState();
     const [isLoaded, setIsLoaded] = useState(false)
 
@@ -53,7 +57,7 @@ function RightSide(props) {
                 },
                 body: JSON.stringify(addResponseTrigger)
             });
-            if(response.status == 500) {
+            if (response.status == 500) {
                 console.log(response.err);
             }
         }
@@ -62,13 +66,59 @@ function RightSide(props) {
             setUserName("");
             props.setResponses([]);
         } else {
-            setIsLoaded((x) =>!x);
+            setIsLoaded((x) => !x);
         }
     }, [addResponseTrigger]);
 
+
+
     // function called when sumbitting responses
     function checkFieldsAndSubmit() {
+        let errorFound = false;
+
         // TODO sanity checks
+        setErrorMessageUsername("");
+        setErrorMessageOpen("");
+        setErrorMessageClosed("");
+        setValidationMessage("");
+
+        if(userName == "") {
+            setErrorMessageUsername((m) => (m + "Please insert username"))
+            errorFound = true;
+        }
+        for (let questionIndex in props.currentSurvey.QuestionsAndAnswers) {
+            if (props.currentSurvey.QuestionsAndAnswers[questionIndex].max == -1) {
+                // open question
+                if (props.currentSurvey.QuestionsAndAnswers[questionIndex].min == 1 && props.responses[questionIndex] == "") {
+                    setErrorMessageOpen((m) => (m + "Mandatory question " + questionIndex));
+                    setMessageColor("danger");
+                    errorFound = true;
+                }
+                
+            } else {
+                // closed question
+                let countTrue = 0;
+                for(let res of props.responses[questionIndex]) {
+                    if(res === true) {
+                        countTrue++;
+                    }
+                }
+                if(countTrue < props.currentSurvey.QuestionsAndAnswers[questionIndex].min) {
+                    console.log(props.currentSurvey.QuestionsAndAnswers[questionIndex])
+                    setErrorMessageClosed((m) => (m + "Min value not respected - question " + questionIndex))
+                    setMessageColor("danger");
+                    errorFound = true;
+                }
+                if(countTrue > props.currentSurvey.QuestionsAndAnswers[questionIndex].max) {
+                    setErrorMessageClosed((m) => (m + "Max value not respected - question " + questionIndex))
+                    setMessageColor("danger");
+                    errorFound = true;
+                }
+            }
+        }
+        if(errorFound) {
+            return;
+        }
 
         // in props.responses = array of responses([], [], ...)
         let response = {
@@ -78,6 +128,8 @@ function RightSide(props) {
         }
 
         setAddResponseTrigger(response);
+        setMessageColor("success");
+        setValidationMessage("Survey submitted correctly!");
 
     }
 
@@ -90,7 +142,7 @@ function RightSide(props) {
         } else if (singleQuestion.answers.length >= 2) {
             // closed question
             let elem = [];
-            for(let i = 0; i < singleQuestion.answers.length; i++) {
+            for (let i = 0; i < singleQuestion.answers.length; i++) {
                 elem.push(0);
             }
             questions.push(<div><ClosedQuestion singleQuestion={singleQuestion} responses={props.responses} setResponses={props.setResponses} index={index} /><br /></div>)
@@ -107,7 +159,11 @@ function RightSide(props) {
                     <Col>
                         <h2>{props.currentSurvey.Title}</h2>
                     </Col>
-                    <Col></Col>
+                    <Col>
+                        <Row><Badge pill variant={messageColor}>{errorMessageUsername}{validationMessage}</Badge></Row>
+                        <Row><Badge pill variant={messageColor}>{errorMessageOpen}</Badge></Row>
+                        <Row><Badge pill variant={messageColor}>{errorMessageClosed}</Badge></Row>
+                    </Col>
                     <Col>
                         <Form.Group className="mb-3">
                             <Row>
@@ -138,18 +194,23 @@ function ClosedQuestion(props) {
 
     const handleResponseClosed = answerIndex => (event) => {
         let a = [...props.responses];
-        if(a[props.index] == undefined) {
-            a[props.index] = [];
-            for(let i = 0; i < props.singleQuestion.answers.length; i++) {
-                a[props.index].push(false);
-            }
-        }
         a[props.index][answerIndex] = !a[props.index][answerIndex];
         props.setResponses(a);
     }
 
     optional = props.singleQuestion.min;
     multiple = props.singleQuestion.max;
+
+    // init response array
+    let a = [...props.responses];
+    if (a[props.index] == undefined) {
+        a[props.index] = [];
+        for (let i = 0; i < props.singleQuestion.answers.length; i++) {
+            a[props.index].push(false);
+        }
+        props.setResponses(a)
+    }
+
 
     // build answers for single question
     for (let index in props.singleQuestion.answers) {
@@ -183,13 +244,19 @@ function OpenQuestion(props) {
 
     const handleResponseOpen = (event) => {
         let a = [...props.responses];
-        
         a[props.index] = event.target.value;
         props.setResponses(a);
     }
 
     if (props.singleQuestion.min == 0) {
         optional = "optional";
+    }
+
+    // init open response
+    let a = [...props.responses];
+    if (a[props.index] == undefined) {
+        a[props.index] = "";
+        props.setResponses(a);
     }
 
     return (

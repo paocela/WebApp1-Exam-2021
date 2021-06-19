@@ -16,7 +16,7 @@ function LeftSide(props) {
                 {props.surveyList.map(
                     (x, index) => {
 
-                        return (<SurveyRow setCurrentSurveyIndex={props.setCurrentSurveyIndex} index={index} survey={x} currentSurvey={props.currentSurvey} setCurrentSurvey={props.setCurrentSurvey} key={x} admin={props.admin} setIndexCurrentUser={props.setIndexCurrentUser} setResponses={props.setResponses}/>)
+                        return (<SurveyRow setCurrentSurveyIndex={props.setCurrentSurveyIndex} index={index} survey={x} currentSurvey={props.currentSurvey} setCurrentSurvey={props.setCurrentSurvey} key={x} admin={props.admin} setIndexCurrentUser={props.setIndexCurrentUser} setResponses={props.setResponses} setGetUsersTrigger={props.setGetUsersTrigger} setLoadingAdmin={props.setLoadingAdmin} />)
                     })
                 }
                 <ListGroup.Item className="bg-transparent">
@@ -53,10 +53,14 @@ function SurveyRow(props) {
     return (<ListGroup.Item onClick={() => {
         props.setCurrentSurveyIndex(props.index);
         props.setCurrentSurvey(props.survey);
-        if(!props.admin) {
+
+        if (!props.admin) {
             props.setResponses([]);
+        } else {
+            props.setGetUsersTrigger((x) => (!x));
+            props.setLoadingAdmin(true);
         }
-        
+
         props.setIndexCurrentUser(0);
     }} action active={active} className="leftButton bg-transparent">
         <Row>

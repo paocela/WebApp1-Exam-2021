@@ -12,7 +12,7 @@ const db = new sqlite.Database('./newSurveys.db', (err) => {
 
 exports.getAdminById = (id) => {
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM admin WHERE id = ?';
+    const sql = 'SELECT * FROM Admin WHERE id = ?';
       db.get(sql, [id], (err, row) => {
         if (err) 
           reject(err);
@@ -21,7 +21,7 @@ exports.getAdminById = (id) => {
         else {
           // by default, the local strategy looks for "username": not to create confusion in server.js, we can create an object with that property
           const admin = {id: row.Id, username: row.Email}
-          resolve(user);
+          resolve(admin);
         }
     });
   });

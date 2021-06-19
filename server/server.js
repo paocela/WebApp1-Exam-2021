@@ -15,8 +15,9 @@ const session = require('express-session'); // enable sessions
 passport.use(new LocalStrategy(
   function (username, password, done) {
     adminDao.getAdmin(username, password).then((user) => {
-      if (!user)
+      if (!user){
         return done(null, false, { message: 'Incorrect username and/or password.' });
+      }
       return done(null, user);
     })
   }
@@ -25,7 +26,7 @@ passport.use(new LocalStrategy(
 // serialize and de-serialize the user (user object <-> session)
 // we serialize the user id and we store it in the session: the session is very small in this way
 passport.serializeUser((user, done) => {
-  done(null, user.Id);
+  done(null, user.id);
 });
 
 // starting from the data in the session, we extract the current (logged-in) user
@@ -97,7 +98,6 @@ app.get('/api/surveysAdmin/:surveyId', /*isLoggedIn,*/ async (req, res) => {
     if (responses.error) {
       res.status(404).json(responses);
     } else if (responses[0].AdminId == req.user.id) {
-      console.log(responses)
       res.json(responses);
     } else {
       res.status(401).send("Not authorized");
@@ -129,7 +129,6 @@ app.post('/api/surveys/:surveyId', async (req, res) => {
       Username: req.body.username,
       Response: JSON.stringify(req.body.response) 
   }
-  console.log(response);
   try {
     await dao.addResponse(response)
     res.status(200).end();

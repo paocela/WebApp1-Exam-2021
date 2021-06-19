@@ -5,6 +5,7 @@ import NavBar from './NavBar';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
 import Alert from 'react-bootstrap/Alert';
 import { Badge } from 'react-bootstrap'
 import { useState, useEffect } from 'react';
@@ -21,7 +22,7 @@ import RightSideAdmin from './RightSideAdmin';
 import { Col } from 'react-bootstrap';
 import CreateSurvey from './CreateSurvey';
 
-let initSurveyList = [
+/*let initSurveyList = [
   {
     title: "Mood",
     users: ["paolo", "luca", "laura"],
@@ -172,7 +173,7 @@ let initSurveyList = [
       }
     ]
   }
-]
+] */
 
 /*
 [
@@ -285,58 +286,77 @@ function App() {
   const [indexCurrentUser, setIndexCurrentUser] = useState()
   const [responses, setResponses] = useState([]); // response of a survey, used in right side
   const [loading, setLoading] = useState(true);
+  const [loadingAdmin, setLoadingAdmin] = useState(true);
+  const [getUsersTrigger, setGetUsersTrigger] = useState(false);
+
+  /* 
+  GET use effect. It performs 2 operations:
+  - if regular user, it perform a GET in order to fetch all available surveys from the server, without responses
+  - if admin, it perform a GET in order to fetch all his surveys previously created, and gets all questions and possible answers (it doesn't get yet answer from single users)
+  */
 
   useEffect(() => {
     const fetchAllUser = async (x) => {
-        const response = await fetch('/api/surveys');
-        const responseBody = await response.json();
-        const res = [...responseBody]
-        setSurveyList(res);
-        setCurrentSurvey(res[0]);
-        setIndexCurrentUser(currentSurvey.users == undefined ? null : 0);
-        setLoading(false);
+      const response = await fetch('/api/surveys');
+      const responseBody = await response.json();
+      const res = [...responseBody]
+      setSurveyList(res);
+      setCurrentSurvey(res[0]);
+      setIndexCurrentUser(currentSurvey.users == undefined ? null : 0);
+      setLoading(false);
     }
     const fetchAllAdmin = async (x) => {
       const response = await fetch('/api/surveysAdmin');
       const responseBody = await response.json();
       const res = responseBody;
-      console.log(responseBody)
-      console.log(res)
       setSurveyList(res);
       setCurrentSurvey(res[0]);
-      setIndexCurrentUser(currentSurvey.users == undefined ? null : 0);
+      setIndexCurrentUser(0);
       setLoading(false);
-  }
-  if(loggedIn) {
-    fetchAllAdmin();
-  } else {
-    fetchAllUser();
-  }
-  
-}, [loggedIn]);
+    }
+    if (loggedIn) {
+      fetchAllAdmin().then(() => { setGetUsersTrigger((x) => (!x)) });
+    } else {
+      fetchAllUser();
+    }
 
+  }, [loggedIn]);
 
-useEffect(() => {
-  const fetchAll = async (x) => {
+  /* 
+   GET use effect. It performs 1 single operation every time the admin select a single survey using the left sidebar:
+   it gets all personal responses from users for a survey and it adds them to the useState survey list
+   to do so every time it reset the list of users and responses, in order to get them again from the server to account for new users responses
+  */
+  useEffect(() => {
+    const fetchAll = async (x) => {
       const response = await fetch('/api/surveysAdmin/' + currentSurvey.Id);
       const responseBody = await response.json();
       const res = [...responseBody]
       let temp = [...surveyList];
-      for(let index in res.responses) {
-        
-        temp[currentSurvey.Id]["Users"].push(res.users[index]);
-        for(let questionIndex in surveyList[currentSurvey.Id].QuestionAndAnswers) {
-          temp[currentSurvey.Id].QuestionAndAnswers[questionIndex]["Responses"].push(res.responses[index]);
+      
+      // reset users and responses list
+      temp[currentSurveyIndex]["Users"] = [];
+      for (let questionIndex in surveyList[currentSurveyIndex].QuestionsAndAnswers) {
+        temp[currentSurveyIndex].QuestionsAndAnswers[questionIndex]["responses"] = [];
+      }
+
+      // add users and responses
+      for (let index in res) {
+        temp[currentSurveyIndex]["Users"].push(res[index].Username);
+        for (let questionIndex in surveyList[currentSurveyIndex].QuestionsAndAnswers) {
+          let jsonResponse = { response: res[index].Response[questionIndex] }
+          temp[currentSurveyIndex].QuestionsAndAnswers[questionIndex]["responses"].push(jsonResponse);
         }
       }
+      console.log(temp);
       setSurveyList(temp);
-  }
-  if(loggedIn) {
-    fetchAll();
-  }
-
-
-}, [currentSurvey]);
+      setCurrentSurvey(surveyList[currentSurveyIndex])
+      setLoadingAdmin(false)
+    }
+    if (loggedIn) {
+      fetchAll();
+    }
+  }, [getUsersTrigger]);
 
   // functions to handle login and logout - interact with server
   const doLogIn = async (credentials) => {
@@ -402,28 +422,42 @@ useEffect(() => {
 
         <Route exact path="/" render={() =>
           <>
-          {
-            loading ? <span>🕗 Please wait, loading your exams... 🕗</span> :
-            <Container fluid>
-              <NavBar title="Survey Manager" doLogOut={doLogOut} />
-              <Row>
-                <LeftSide setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={false} setIndexCurrentUser={setIndexCurrentUser} setResponses={setResponses}/>
-                <RightSide currentSurvey={currentSurvey} currentSurveyIndex={currentSurveyIndex} surveyList={surveyList} responses={responses} setResponses={setResponses} />
-              </Row>
-            </Container>
-          }
-            
+            {
+              loading ? <Container fluid>
+                <Spinner animation="border" variant="primary" />
+                <span>   Please wait, loading your surveys...   </span>
+                <Spinner animation="border" variant="primary" />
+              </Container> :
+                <Container fluid>
+                  <NavBar title="Survey Manager" doLogOut={doLogOut} />
+                  <Row>
+                    <LeftSide setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={false} setIndexCurrentUser={setIndexCurrentUser} setResponses={setResponses} />
+                    <RightSide currentSurvey={currentSurvey} currentSurveyIndex={currentSurveyIndex} surveyList={surveyList} responses={responses} setResponses={setResponses} />
+                  </Row>
+                </Container>
+            }
+
           </>
         } />
 
         <Route exact path="/admin" render={() =>
-          <>
-            <NavBar title="Survey Manager - Admin" doLogOut={doLogOut} />
-            <Row>
-              <LeftSide setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={true} setIndexCurrentUser={setIndexCurrentUser} />
-              <RightSideAdmin currentSurvey={currentSurvey} indexCurrentUser={indexCurrentUser} setIndexCurrentUser={setIndexCurrentUser} />
-            </Row>
-
+          <>{
+            loggedIn ?
+              loadingAdmin ? <Container fluid>
+                <Spinner animation="border" variant="primary" />
+                <span>   Please wait, loading your surveys manager...   </span>
+                <Spinner animation="border" variant="primary" />
+              </Container> :
+                <Container fluid >
+                  <NavBar title="Survey Manager - Admin" doLogOut={doLogOut} />
+                  <Row>
+                    <LeftSide setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={true} setIndexCurrentUser={setIndexCurrentUser} setGetUsersTrigger={setGetUsersTrigger} setLoadingAdmin={setLoadingAdmin} />
+                    <RightSideAdmin currentSurvey={currentSurvey} indexCurrentUser={indexCurrentUser} setIndexCurrentUser={setIndexCurrentUser} />
+                  </Row>
+                </Container>
+              :
+              <Redirect to="/login" />
+          }
           </>
         } />
 
@@ -443,7 +477,7 @@ useEffect(() => {
           </>
         } />
 
-      
+
 
       </Switch>
     </Router>
