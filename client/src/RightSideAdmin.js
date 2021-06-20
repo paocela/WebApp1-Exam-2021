@@ -95,7 +95,7 @@ function RightSideAdmin(props) {
         <React.Fragment>
             <Col sm={8} className="below-nav vheight-100">
                 <Row>
-                    <Col><h2>{props.currentSurvey.title}</h2></Col>
+                    <Col><h2>{props.currentSurvey.Title}</h2></Col>
                     <Col></Col>
                     <Col>
                         <Row>
@@ -154,7 +154,6 @@ function ClosedQuestion(props) {
             <ListGroup.Item as="li" variant="secondary">
                 <Row>
                     <Col>{props.singleQuestion.question}</Col>
-                    <Col></Col>
                     <Col></Col>
                     <Col >
                         <Badge pill variant="info">min = {optional}</Badge>

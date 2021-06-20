@@ -288,6 +288,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [loadingAdmin, setLoadingAdmin] = useState(true);
   const [getUsersTrigger, setGetUsersTrigger] = useState(false);
+  const [postNewSurveyTrigger, setPostNewSurveyTrigger] = useState(false);
 
   /* 
   GET use effect. It performs 2 operations:
@@ -300,15 +301,18 @@ function App() {
       const response = await fetch('/api/surveys');
       const responseBody = await response.json();
       const res = [...responseBody]
+      console.log(res)
       setSurveyList(res);
       setCurrentSurvey(res[0]);
       setIndexCurrentUser(currentSurvey.users == undefined ? null : 0);
       setLoading(false);
+      setLoadingAdmin(true);
     }
     const fetchAllAdmin = async (x) => {
       const response = await fetch('/api/surveysAdmin');
       const responseBody = await response.json();
       const res = responseBody;
+      console.log(res)
       setSurveyList(res);
       setCurrentSurvey(res[0]);
       setIndexCurrentUser(0);
@@ -320,7 +324,7 @@ function App() {
       fetchAllUser();
     }
 
-  }, [loggedIn]);
+  }, [loggedIn, postNewSurveyTrigger]);
 
   /* 
    GET use effect. It performs 1 single operation every time the admin select a single survey using the left sidebar:
@@ -333,7 +337,6 @@ function App() {
       const responseBody = await response.json();
       const res = [...responseBody]
       let temp = [...surveyList];
-      
       // reset users and responses list
       temp[currentSurveyIndex]["Users"] = [];
       for (let questionIndex in surveyList[currentSurveyIndex].QuestionsAndAnswers) {
@@ -468,10 +471,8 @@ function App() {
               <React.Fragment>
                 <NavBar title="Survey Manager - Admin" doLogOut={doLogOut} />
                 <Row>
-                  <CreateSurvey surveyList={surveyList} setSurveyList={setSurveyList} />
-
+                  <CreateSurvey setLoadingAdmin={setLoadingAdmin} setPostNewSurveyTrigger={setPostNewSurveyTrigger} surveyList={surveyList} setSurveyList={setSurveyList} />
                 </Row>
-
               </React.Fragment>
               : <Redirect to="/login" />}
           </>

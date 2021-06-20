@@ -1,9 +1,9 @@
-import { ListGroup } from 'react-bootstrap'
+import { InputGroup, ListGroup } from 'react-bootstrap'
 import './App.css';
 import './LeftSide.css';
 import { Col, Row, Button, Form, Badge } from "react-bootstrap"
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import React from 'react';
 import { arrowUp, arrowDown, deleteIcon } from './Icons.js'
 
@@ -50,23 +50,95 @@ questions: [
 
 function CreateSurvey(props) {
     // global use states needed througout the whole page
-    let [questionList, setQuestionList] = useState([]);
-    let [numberAnswers, setNumberAnswers] = useState(""); // number answers of a question
-    let [minClosed, setMinClosed] = useState(""); // set if optional or mandatory
-    let [maxClosed, setMaxClosed] = useState(""); // set if single response or multiple possible
-    let [optionalOpen, setOptionalOpen] = useState(""); // set if optional or mandatory
+    const [questionList, setQuestionList] = useState([]);
+    const [numberAnswers, setNumberAnswers] = useState(""); // number answers of a question
+    const [minClosed, setMinClosed] = useState(""); // set if optional or mandatory
+    const [maxClosed, setMaxClosed] = useState(""); // set if single response or multiple possible
+    const [optionalOpen, setOptionalOpen] = useState(""); // set if optional or mandatory
+    const [surveyTitle, setSurveyTitle] = useState("");
+    const [addSurveyTrigger, setAddSurveyTrigger] = useState();
+    const [isLoaded, setIsLoaded] = useState(false)
+    const [errorMessageTitle, setErrorMessageTitle] = useState("");
+    const [errorMessageAnswers, setErrorMessageAnswers] = useState("");
+    const [errorMessageQuestions, setErrorMessageQuestions] = useState("");
+    const [submitted, setSubmitted] = useState(false);
 
-    let [surveyTitle, setSurveyTitle] = useState("");
 
 
 
+    useEffect(() => {
+        const postSurvey = async () => {
+            const response = await fetch('/api/surveys/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(addSurveyTrigger)
+            });
+            if (response.status == 500) {
+                console.log(response.err);
+            }
+        }
+        if (isLoaded) {
+            postSurvey();
+            // TODO reset states
 
+        } else {
+            setIsLoaded((x) => !x);
+        }
+    }, [addSurveyTrigger]);
+
+    // function called when sumbitting responses
+    function checkFieldsAndSubmit() {
+        let errorFound = false;
+
+        setErrorMessageTitle("");
+        setErrorMessageAnswers("");
+
+        // sanity checks
+        if (surveyTitle == "") {
+            setErrorMessageTitle("Please insert title");
+            errorFound = true;
+        }
+        console.log(questionList)
+        for (let questionIndex in questionList) {
+            if(questionList[questionIndex].question == "") {
+                setErrorMessageQuestions("Please fill all questions");
+            }
+            for (let answer of questionList[questionIndex].answers) {
+                if (questionList[questionIndex].max != -1 && answer == "") {
+                    setErrorMessageAnswers("Please fill all answers");
+                    errorFound = true;
+                }
+            }
+        }
+        if (errorFound) {
+            return;
+        }
+
+        let survey = {
+            title: surveyTitle,
+            questionsAndAnswers: questionList
+        }
+
+        setAddSurveyTrigger(survey);
+        props.setLoadingAdmin(true);
+        props.setPostNewSurveyTrigger((x) => (!x));
+        setSurveyTitle("");
+        setQuestionList([]);
+        setSubmitted(true);
+    }
 
     return (
-        <React.Fragment>
-            <CreateLeftSide setQuestionList={setQuestionList} setOptionalOpen={setOptionalOpen} optionalOpen={optionalOpen} setMinClosed={setMinClosed} minClosed={minClosed} setNumberAnswers={setNumberAnswers} numberAnswers={numberAnswers} setMaxClosed={setMaxClosed} maxClosed={maxClosed} />
-            <CreateRightSide questionList={questionList} setQuestionList={setQuestionList} setSurveyTitle={setSurveyTitle} surveyTitle={surveyTitle} />
-        </React.Fragment>
+        <>
+            {
+                submitted ? <Redirect to="/admin" /> :
+                    <React.Fragment>
+                        <CreateLeftSide setQuestionList={setQuestionList} setOptionalOpen={setOptionalOpen} optionalOpen={optionalOpen} setMinClosed={setMinClosed} minClosed={minClosed} setNumberAnswers={setNumberAnswers} numberAnswers={numberAnswers} setMaxClosed={setMaxClosed} maxClosed={maxClosed} />
+                        <CreateRightSide errorMessageQuestions={errorMessageQuestions} errorMessageTitle={errorMessageTitle} errorMessageAnswers={errorMessageAnswers} checkFieldsAndSubmit={checkFieldsAndSubmit} questionList={questionList} setQuestionList={setQuestionList} setSurveyTitle={setSurveyTitle} surveyTitle={surveyTitle} />
+                    </React.Fragment>
+            }
+        </>
     );
 }
 
@@ -137,7 +209,7 @@ function CreateRightSide(props) {
                         <Row>
                             <Button className="btn btn-md switch-user-left" variant="outline-danger" onClick={() => { deleteQuestion(index) }}>{deleteIcon}</Button>
                         </Row>
-                        <br/>
+                        <br />
                     </Col>
                 </Row>
             </div>)
@@ -159,7 +231,7 @@ function CreateRightSide(props) {
                             <Button className="btn btn-md switch-user-left" variant="outline-danger" onClick={() => { deleteQuestion(index) }}>{deleteIcon}</Button>
                         </Row>
                     </Col>
-                    
+
                 </Row>
             </div>)
         }
@@ -169,23 +241,29 @@ function CreateRightSide(props) {
         <React.Fragment>
             <Col sm={8} className="below-nav vheight-100">
                 <Row>
-                    <Col sm={9}>
+                    <Col sm={8}>
                         <Row>
-                            <Col className="form-element" sm={3} className="form-element">
+                            <Col className="form-element" sm={4} className="form-element">
                                 <h3>
                                     Survey Title
                                 </h3>
                             </Col>
-                            <Col sm={8}><Form.Control onChange={handleSurveyTitle} value={props.surveyTitle} size="md" placeholder="..." /></Col>
+                            <Col sm={7}><Form.Control onChange={handleSurveyTitle} value={props.surveyTitle} size="md" placeholder="..." /></Col>
                             <Col sm={1}></Col>
                         </Row>
                     </Col>
-                    <Col sm={3}>
+                    <Col sm={2}>
+                        <Row><Badge pill variant="danger">{props.errorMessageTitle}</Badge></Row>
+                        <Row><Badge pill variant="danger">{props.errorMessageAnswers}</Badge></Row>
+                        <Row><Badge pill variant="danger">{props.errorMessageQuestions}</Badge></Row>
+                    </Col>
+                    <Col sm={2}>
                         <Form.Group className="mb-3">
-                            <Button className="btn btn-new-survey btn-md btn-block" variant="outline-primary" onClick={() => { }}>SUBMIT</Button>
+                            <Button className="btn btn-new-survey btn-md btn-block" variant="outline-primary" onClick={() => { props.checkFieldsAndSubmit() }}>SUBMIT</Button>
                         </Form.Group>
                     </Col>
                 </Row>
+
                 <ListGroup variant="flush">
                     {questions}
                 </ListGroup>
@@ -309,12 +387,11 @@ function CreateLeftSide(props) {
                 answers: [],
                 numberAnswers: props.numberAnswers,
                 min: props.minClosed,
-                max: props.maxClosed,
-                responses: []
+                max: props.maxClosed
             };
 
             // initialize answers to avoid problems in inserting 3rd answer before 1st
-            for(let i = 0; i < question.numberAnswers; i++) {
+            for (let i = 0; i < question.numberAnswers; i++) {
                 question.answers.push("");
             }
 
@@ -338,11 +415,9 @@ function CreateLeftSide(props) {
 
             let question = {
                 question: "",
-                answers: [],
-                numberAnswers: props.numberAnswers,
+                answers: [""],
                 min: optional,
-                max: -1,
-                responses: []
+                max: -1
             };
 
             props.setQuestionList((l) => ([...l, question]));

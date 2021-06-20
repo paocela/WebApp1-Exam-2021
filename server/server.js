@@ -51,7 +51,7 @@ app.use(express.json());
 const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated())
     return next();
-
+    
   return res.status(401).json({ error: 'not authenticated' });
 }
 
@@ -111,17 +111,6 @@ app.get('/api/surveysAdmin/:surveyId', /*isLoggedIn,*/ async (req, res) => {
 // submit a new response for a given survey (identified with surveyId <surveyId>)
 app.post('/api/surveys/:surveyId', async (req, res) => {
 
-  /*
-  pass object like
-  {
-    surveyId: 1,
-    username: "pierino",
-    response: [
-      [0, 0, 1],
-    "Ciao"
-    ]
-  }
-  */
 
   // create task
   let response = {
@@ -152,18 +141,20 @@ app.post('/api/surveys', isLoggedIn, async (req, res) => {
   }
   */
 
-  // create task
+  // create survey
   let survey = {
       Title: req.body.title,
-      AdminId: req.body.req.user.id,
+      AdminId: req.user.id,
       NumberQuestions: req.body.questionsAndAnswers.length,
-      QuestionsAndAnswers: JSON.stringify(req.body.questionsAndAnswers) 
+      QuestionsAndAnswers: JSON.stringify(req.body.questionsAndAnswers),
+      NumberResponses: 0 
   }
+
   try {
     await dao.addSurvey(survey)
     res.status(200).end();
   } catch (err) {
-    res.status(500).json({ error: 'Cannot create response' });
+    res.status(500).json({ error: 'Cannot create survey' });
   }
 
 

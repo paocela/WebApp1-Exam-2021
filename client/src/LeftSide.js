@@ -41,7 +41,7 @@ function SurveyRow(props) {
     // differentiate among leftSide for user and for admin
     if (props.admin) {
         // TODO
-        //numResponses = props.survey.users.length;
+        numResponses = props.survey.NumberResponses;
     }
 
     // select currect active list element

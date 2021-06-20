@@ -76,7 +76,7 @@ function RightSide(props) {
     function checkFieldsAndSubmit() {
         let errorFound = false;
 
-        // TODO sanity checks
+        // TODO check max 200 chars for open questions
         setErrorMessageUsername("");
         setErrorMessageOpen("");
         setErrorMessageClosed("");
@@ -84,6 +84,7 @@ function RightSide(props) {
 
         if(userName == "") {
             setErrorMessageUsername((m) => (m + "Please insert username"))
+            setMessageColor("danger");
             errorFound = true;
         }
         for (let questionIndex in props.currentSurvey.QuestionsAndAnswers) {
