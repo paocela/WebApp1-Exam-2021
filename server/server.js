@@ -92,9 +92,10 @@ app.get('/api/surveysAdmin', /*isLoggedIn,*/ async (req, res) => {
 
 // GET /api/surveys/<surveyId>
 // get responses for a given survey (identified with surveyId <surveyId>)
-app.get('/api/surveysAdmin/:surveyId', /*isLoggedIn,*/ async (req, res) => {
+app.get('/api/surveysAdmin/:surveyId', isLoggedIn, async (req, res) => {
   try {
     const responses = await dao.getResponses(req.params.surveyId);
+    
     if (responses.error) {
       res.status(404).json(responses);
     } else if (responses[0].AdminId == req.user.id) {

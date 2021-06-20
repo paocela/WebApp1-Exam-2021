@@ -337,6 +337,9 @@ function App() {
       const responseBody = await response.json();
       const res = [...responseBody]
       let temp = [...surveyList];
+
+      // TODO update number responses if different from the one got from server
+
       // reset users and responses list
       temp[currentSurveyIndex]["Users"] = [];
       for (let questionIndex in surveyList[currentSurveyIndex].QuestionsAndAnswers) {
@@ -356,8 +359,10 @@ function App() {
       setCurrentSurvey(surveyList[currentSurveyIndex])
       setLoadingAdmin(false)
     }
-    if (loggedIn) {
+    if (loggedIn && currentSurvey.NumberResponses > 0) {
       fetchAll();
+    } else {
+      setLoadingAdmin(false);
     }
   }, [getUsersTrigger]);
 
