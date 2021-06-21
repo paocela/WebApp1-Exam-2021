@@ -142,6 +142,8 @@ app.post('/api/surveys', isLoggedIn, async (req, res) => {
   }
   */
 
+  // TODO add query to search for survey with same name --> if found, return specific code and show message to client admin
+
   // create survey
   let survey = {
       Title: req.body.title,

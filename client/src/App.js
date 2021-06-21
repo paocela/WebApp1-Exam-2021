@@ -289,6 +289,10 @@ function App() {
   const [loadingAdmin, setLoadingAdmin] = useState(true);
   const [getUsersTrigger, setGetUsersTrigger] = useState(false);
   const [postNewSurveyTrigger, setPostNewSurveyTrigger] = useState(false);
+  const [errorMessageUsername, setErrorMessageUsername] = useState("");
+  const [errorMessageClosed, setErrorMessageClosed] = useState("");
+  const [errorMessageOpen, setErrorMessageOpen] = useState("");
+  const [validationMessage, setValidationMessage] = useState("");
 
   /* 
   GET use effect. It performs 2 operations:
@@ -301,7 +305,6 @@ function App() {
       const response = await fetch('/api/surveys');
       const responseBody = await response.json();
       const res = [...responseBody]
-      console.log(res)
       setSurveyList(res);
       setCurrentSurvey(res[0]);
       setIndexCurrentUser(currentSurvey.users == undefined ? null : 0);
@@ -312,9 +315,9 @@ function App() {
       const response = await fetch('/api/surveysAdmin');
       const responseBody = await response.json();
       const res = responseBody;
-      console.log(res)
       setSurveyList(res);
       setCurrentSurvey(res[0]);
+      setCurrentSurveyIndex(0);
       setIndexCurrentUser(0);
       setLoading(false);
     }
@@ -337,8 +340,13 @@ function App() {
       const responseBody = await response.json();
       const res = [...responseBody]
       let temp = [...surveyList];
-
-      // TODO update number responses if different from the one got from server
+      console.log(temp);
+      console.log(currentSurveyIndex);
+      // fix number of responses if while in /admin, a user responded to a survey
+      // because number of responses on left side is fetched from server only when the page is loaded
+      if (res.length != temp[currentSurveyIndex].NumberResponses) {
+        temp[currentSurveyIndex].NumberResponses = res.length;
+      }
 
       // reset users and responses list
       temp[currentSurveyIndex]["Users"] = [];
@@ -354,7 +362,6 @@ function App() {
           temp[currentSurveyIndex].QuestionsAndAnswers[questionIndex]["responses"].push(jsonResponse);
         }
       }
-      console.log(temp);
       setSurveyList(temp);
       setCurrentSurvey(surveyList[currentSurveyIndex])
       setLoadingAdmin(false)
@@ -437,8 +444,8 @@ function App() {
                 <Container fluid>
                   <NavBar title="Survey Manager" doLogOut={doLogOut} />
                   <Row>
-                    <LeftSide setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={false} setIndexCurrentUser={setIndexCurrentUser} setResponses={setResponses} />
-                    <RightSide currentSurvey={currentSurvey} currentSurveyIndex={currentSurveyIndex} surveyList={surveyList} responses={responses} setResponses={setResponses} />
+                    <LeftSide setErrorMessageUsername={setErrorMessageUsername} setErrorMessageClosed={setErrorMessageClosed} setErrorMessageOpen={setErrorMessageOpen} setValidationMessage={setValidationMessage} setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={false} setIndexCurrentUser={setIndexCurrentUser} setResponses={setResponses} />
+                    <RightSide errorMessageUsername={errorMessageUsername} errorMessageClosed={errorMessageClosed} errorMessageOpen={errorMessageOpen} validationMessage={validationMessage} setErrorMessageUsername={setErrorMessageUsername} setErrorMessageClosed={setErrorMessageClosed} setErrorMessageOpen={setErrorMessageOpen} setValidationMessage={setValidationMessage} currentSurvey={currentSurvey} currentSurveyIndex={currentSurveyIndex} surveyList={surveyList} responses={responses} setResponses={setResponses} />
                   </Row>
                 </Container>
             }

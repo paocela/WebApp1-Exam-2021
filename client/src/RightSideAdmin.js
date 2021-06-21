@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, ListGroup, Badge } from "react-bootstrap";
+import { Form, ListGroup, Badge, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { switchUserRight, switchUserLeft } from './Icons.js'
 import './RightSide.css';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -100,7 +100,9 @@ function RightSideAdmin(props) {
                     <Col>
                         <Row>
                             <Col>
-                                <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { calculateNextUser(0) }}>{switchUserLeft}</Button>
+                                <OverlayTrigger placement="left" overlay={<Tooltip id="tooltip-disabled">Previous!</Tooltip>}>
+                                    <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { calculateNextUser(0) }}>{switchUserLeft}</Button>
+                                </OverlayTrigger>
                             </Col>
                             <Col>
                                 <h4>
@@ -108,7 +110,9 @@ function RightSideAdmin(props) {
                                 </h4>
                             </Col>
                             <Col>
-                                <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { calculateNextUser(1) }}>{switchUserRight}</Button>
+                                <OverlayTrigger placement="right" overlay={<Tooltip id="tooltip-disabled">Next!</Tooltip>}>
+                                    <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { calculateNextUser(1) }}>{switchUserRight}</Button>
+                                </OverlayTrigger>
                             </Col>
                         </Row>
                     </Col>
@@ -124,28 +128,17 @@ function RightSideAdmin(props) {
 function ClosedQuestion(props) {
     let answerRowList = [];
     let answer;
-    let type = "";
     let optional = "mandatory";
     let multiple = "";
 
-    // render input forms correctly
-    if (props.singleQuestion.max == 1) {
-        // only single answer allowed --> radio button
-        type = "radio";
-    } else {
-        // multiple answers allowed --> checkbox button
-        type = "checkbox";
-    }
-
     optional = props.singleQuestion.min;
     multiple = props.singleQuestion.max;
-    console.log(props.singleQuestion)
     // build answers for single question
     for (let index in props.singleQuestion.answers) {
         answer = props.singleQuestion.answers[index];
         // TODO: fix radio buttons (don't force single option and don't allow to deselect, for optional case)
         answerRowList.push(<ListGroup.Item as="li">
-            <Form.Check type={type} checked={props.singleQuestion.responses[props.indexCurrentUser].response[index]} label={answer} id={answer} />
+            <Form.Check type={"checkbox"} checked={props.singleQuestion.responses[props.indexCurrentUser].response[index]} label={answer} id={answer} />
         </ListGroup.Item>);
     }
 

@@ -40,10 +40,6 @@ function RightSide(props) {
     let questions = [];
     let singleQuestion;
     const [userName, setUserName] = useState("");
-    const [errorMessageUsername, setErrorMessageUsername] = useState("");
-    const [errorMessageClosed, setErrorMessageClosed] = useState("");
-    const [errorMessageOpen, setErrorMessageOpen] = useState("");
-    const [validationMessage, setValidationMessage] = useState("")
     const [messageColor, setMessageColor] = useState("");
     const [addResponseTrigger, setAddResponseTrigger] = useState();
     const [isLoaded, setIsLoaded] = useState(false)
@@ -77,13 +73,13 @@ function RightSide(props) {
         let errorFound = false;
 
         // TODO check max 200 chars for open questions
-        setErrorMessageUsername("");
-        setErrorMessageOpen("");
-        setErrorMessageClosed("");
-        setValidationMessage("");
+        props.setErrorMessageUsername("");
+        props.setErrorMessageOpen("");
+        props.setErrorMessageClosed("");
+        props.setValidationMessage("");
 
         if(userName == "") {
-            setErrorMessageUsername((m) => (m + "Please insert username"))
+            props.setErrorMessageUsername((m) => (m + "Please insert username"))
             setMessageColor("danger");
             errorFound = true;
         }
@@ -91,7 +87,7 @@ function RightSide(props) {
             if (props.currentSurvey.QuestionsAndAnswers[questionIndex].max == -1) {
                 // open question
                 if (props.currentSurvey.QuestionsAndAnswers[questionIndex].min == 1 && props.responses[questionIndex] == "") {
-                    setErrorMessageOpen((m) => (m + "Mandatory question " + questionIndex));
+                    props.setErrorMessageOpen((m) => (m + "Mandatory (question " + questionIndex + ") "));
                     setMessageColor("danger");
                     errorFound = true;
                 }
@@ -105,13 +101,12 @@ function RightSide(props) {
                     }
                 }
                 if(countTrue < props.currentSurvey.QuestionsAndAnswers[questionIndex].min) {
-                    console.log(props.currentSurvey.QuestionsAndAnswers[questionIndex])
-                    setErrorMessageClosed((m) => (m + "Min value not respected - question " + questionIndex))
+                    props.setErrorMessageClosed((m) => (m + "Min value not respected (question " + questionIndex + ") "))
                     setMessageColor("danger");
                     errorFound = true;
                 }
                 if(countTrue > props.currentSurvey.QuestionsAndAnswers[questionIndex].max) {
-                    setErrorMessageClosed((m) => (m + "Max value not respected - question " + questionIndex))
+                    props.setErrorMessageClosed((m) => (m + "Max value not respected (question " + questionIndex + ") "))
                     setMessageColor("danger");
                     errorFound = true;
                 }
@@ -130,7 +125,7 @@ function RightSide(props) {
 
         setAddResponseTrigger(response);
         setMessageColor("success");
-        setValidationMessage("Survey submitted correctly!");
+        props.setValidationMessage("Survey submitted correctly!");
 
     }
 
@@ -161,9 +156,9 @@ function RightSide(props) {
                         <h2>{props.currentSurvey.Title}</h2>
                     </Col>
                     <Col>
-                        <Row><Badge pill variant={messageColor}>{errorMessageUsername}{validationMessage}</Badge></Row>
-                        <Row><Badge pill variant={messageColor}>{errorMessageOpen}</Badge></Row>
-                        <Row><Badge pill variant={messageColor}>{errorMessageClosed}</Badge></Row>
+                        <Row><Badge pill variant={messageColor}>{props.errorMessageUsername}{props.validationMessage}</Badge></Row>
+                        <Row><Badge pill variant={messageColor}>{props.errorMessageOpen}</Badge></Row>
+                        <Row><Badge pill variant={messageColor}>{props.errorMessageClosed}</Badge></Row>
                     </Col>
                     <Col>
                         <Form.Group className="mb-3">
@@ -189,7 +184,6 @@ function RightSide(props) {
 function ClosedQuestion(props) {
     let answerRowList = [];
     let answer;
-    let type = "";
     let optional;
     let multiple;
 

@@ -1,6 +1,6 @@
 import { Form, Button, Alert, Col, Row, Badge } from 'react-bootstrap';
 import { useState } from 'react';
-import { Link } from  'react-router-dom';
+import { Link } from 'react-router-dom';
 import "./App.css"
 
 //import { Redirect } from 'react-router';
@@ -40,10 +40,9 @@ function LoginForm(props) {
     <Row>
       <Col></Col>
       <Col className="logIn-title">
-        <div>
-          <h1 pill bg="failure">Survey LogIn</h1>
-        </div>
-
+        <h1>
+          <Badge pill variant="primary">Survey LogIn</Badge>
+        </h1>
       </Col>
       <Col></Col>
     </Row>
@@ -66,9 +65,9 @@ function LoginForm(props) {
             </Col>
             <Col></Col>
             <Col>
-              <Link className='justify-content-end'  type="submit" to="/" key="/login">
+              <Link className='justify-content-end' type="submit" to="/" key="/login">
                 <Button variant="secondary" type="submit">
-                Go back as user
+                  Go back as user
                 </Button>
               </Link>
             </Col>

@@ -16,7 +16,7 @@ function LeftSide(props) {
                 {props.surveyList.map(
                     (x, index) => {
 
-                        return (<SurveyRow setCurrentSurveyIndex={props.setCurrentSurveyIndex} index={index} survey={x} currentSurvey={props.currentSurvey} setCurrentSurvey={props.setCurrentSurvey} key={x} admin={props.admin} setIndexCurrentUser={props.setIndexCurrentUser} setResponses={props.setResponses} setGetUsersTrigger={props.setGetUsersTrigger} setLoadingAdmin={props.setLoadingAdmin} />)
+                        return (<SurveyRow setErrorMessageUsername={props.setErrorMessageUsername} setErrorMessageClosed={props.setErrorMessageClosed} setErrorMessageOpen={props.setErrorMessageOpen} setValidationMessage={props.setValidationMessage} setCurrentSurveyIndex={props.setCurrentSurveyIndex} index={index} survey={x} currentSurvey={props.currentSurvey} setCurrentSurvey={props.setCurrentSurvey} key={x} admin={props.admin} setIndexCurrentUser={props.setIndexCurrentUser} setResponses={props.setResponses} setGetUsersTrigger={props.setGetUsersTrigger} setLoadingAdmin={props.setLoadingAdmin} />)
                     })
                 }
                 <ListGroup.Item className="bg-transparent">
@@ -61,6 +61,10 @@ function SurveyRow(props) {
             props.setCurrentSurveyIndex(props.index);
             props.setCurrentSurvey(props.survey);
             props.setResponses([]);
+            props.setErrorMessageUsername("");
+            props.setErrorMessageClosed("");
+            props.setErrorMessageOpen("");
+            props.setValidationMessage("");
         }
 
         props.setIndexCurrentUser(0);

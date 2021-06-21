@@ -1,7 +1,7 @@
 import { InputGroup, ListGroup } from 'react-bootstrap'
 import './App.css';
 import './LeftSide.css';
-import { Col, Row, Button, Form, Badge } from "react-bootstrap"
+import { Col, Row, Button, Form, Badge, Alert } from "react-bootstrap"
 import { Link, Redirect } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import React from 'react';
@@ -100,10 +100,10 @@ function CreateSurvey(props) {
             setErrorMessageTitle("Please insert title");
             errorFound = true;
         }
-        console.log(questionList)
         for (let questionIndex in questionList) {
             if(questionList[questionIndex].question == "") {
                 setErrorMessageQuestions("Please fill all questions");
+                errorFound = true;
             }
             for (let answer of questionList[questionIndex].answers) {
                 if (questionList[questionIndex].max != -1 && answer == "") {
@@ -369,7 +369,7 @@ function CreateLeftSide(props) {
 
             // TODO check input and display error with message
             if (props.minClosed == "" || props.maxClosed == "" || props.numberAnswers == "") {
-                setErrorMessageClosed("Input cannot be NULL");
+                setErrorMessageClosed("Input cannot be NULL or non numeric");
                 return;
             }
 
@@ -463,7 +463,7 @@ function CreateLeftSide(props) {
                     <Button className="btn btn-new-survey btn-md btn-block" variant="outline-primary" onClick={() => { checkCreateFields(0) }}>CREATE QUESTION</Button>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                    <Badge variant="danger">{errorMessageClosed}</Badge>
+                    {errorMessageClosed ? <Alert variant="danger">{errorMessageClosed}</Alert> : ''}
                 </ListGroup.Item>
 
                 <ListGroup.Item active >
@@ -498,7 +498,7 @@ function CreateLeftSide(props) {
                     <Button className="btn btn-new-survey btn-md btn-block" variant="outline-primary" onClick={() => { checkCreateFields(1) }}>CREATE QUESTION</Button>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                    <Badge variant="danger">{errorMessageOpen}</Badge>
+                    {errorMessageOpen ? <Alert variant="danger">{errorMessageOpen}</Alert> : ''}
                 </ListGroup.Item>
             </ListGroup>
         </Col>
