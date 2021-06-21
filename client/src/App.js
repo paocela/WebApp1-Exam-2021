@@ -359,10 +359,8 @@ function App() {
       setCurrentSurvey(surveyList[currentSurveyIndex])
       setLoadingAdmin(false)
     }
-    if (loggedIn && currentSurvey.NumberResponses > 0) {
+    if (loggedIn) {
       fetchAll();
-    } else {
-      setLoadingAdmin(false);
     }
   }, [getUsersTrigger]);
 

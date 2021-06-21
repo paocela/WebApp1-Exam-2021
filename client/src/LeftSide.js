@@ -40,7 +40,6 @@ function SurveyRow(props) {
 
     // differentiate among leftSide for user and for admin
     if (props.admin) {
-        // TODO
         numResponses = props.survey.NumberResponses;
     }
 
@@ -51,14 +50,17 @@ function SurveyRow(props) {
 
     // onClick allows to properly select a different element and switch among surveys
     return (<ListGroup.Item onClick={() => {
-        props.setCurrentSurveyIndex(props.index);
-        props.setCurrentSurvey(props.survey);
-
-        if (!props.admin) {
-            props.setResponses([]);
+        if (props.admin) {
+            if (props.survey.NumberResponses > 0) {
+                props.setCurrentSurveyIndex(props.index);
+                props.setCurrentSurvey(props.survey);
+                props.setGetUsersTrigger((x) => (!x));
+                props.setLoadingAdmin(true);
+            }
         } else {
-            props.setGetUsersTrigger((x) => (!x));
-            props.setLoadingAdmin(true);
+            props.setCurrentSurveyIndex(props.index);
+            props.setCurrentSurvey(props.survey);
+            props.setResponses([]);
         }
 
         props.setIndexCurrentUser(0);

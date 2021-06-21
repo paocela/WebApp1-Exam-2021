@@ -116,6 +116,8 @@ function CreateSurvey(props) {
             return;
         }
 
+        // TODO check unicity of survey name
+
         let survey = {
             title: surveyTitle,
             questionsAndAnswers: questionList
