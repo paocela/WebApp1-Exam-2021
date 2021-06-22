@@ -65,7 +65,7 @@ function LoginForm(props) {
             </Col>
             <Col></Col>
             <Col>
-              <Link className='justify-content-end' type="submit" to="/" key="/login">
+              <Link className='justify-content-end form-inline' type="submit" to="/" key="/login">
                 <Button variant="secondary" type="submit">
                   Go back as user
                 </Button>

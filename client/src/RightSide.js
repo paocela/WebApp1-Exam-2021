@@ -8,33 +8,6 @@ import Row from "react-bootstrap/Row"
 import { useState, useEffect } from 'react';
 
 
-/*
-  {
-    title: "Mood",
-    questions: [
-      {
-        question: "How are you?",
-        answers: ["Good", "Tired", "Bored"],
-        min: 0,
-        max: -1
-      },
-      {
-        question: "Describe your day?",
-        answers: ["I've been programming a web app all day!"]
-      }
-    ]
-  }
-*/
-
-/*
-response = [
-    [1, 0, 1, 0],
-    ["ciao"],
-    ["response"],
-    ...
-]
-*/
-
 
 function RightSide(props) {
     let questions = [];

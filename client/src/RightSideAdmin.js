@@ -111,7 +111,7 @@ function RightSideAdmin(props) {
                             </Col>
                             <Col>
                                 <OverlayTrigger placement="right" overlay={<Tooltip id="tooltip-disabled">Next!</Tooltip>}>
-                                    <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { calculateNextUser(1) }}>{switchUserRight}</Button>
+                                    <Button className="btn btn-md switch-user-left form-inline" variant="outline-primary" onClick={() => { calculateNextUser(1) }}>{switchUserRight}</Button>
                                 </OverlayTrigger>
                             </Col>
                         </Row>

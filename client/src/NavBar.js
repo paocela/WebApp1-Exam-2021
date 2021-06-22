@@ -2,7 +2,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import './NavBar.css';
 import { iconSurvey, iconLogin, iconLogout } from './Icons.js'
-import { Container, Form, FormControl, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Container, Form, FormControl, OverlayTrigger, Tooltip, Row, Col } from "react-bootstrap";
 import { Redirect } from "react-router";
 import { Link } from 'react-router-dom';
 
@@ -11,11 +11,17 @@ function NavBar(props) {
     return (
         <Navbar className="navbar navbar-dark navbar-expand-sm bg-primary fixed-top" expand="lg">
             <Navbar.Brand className="iconSurvey">
-                {iconSurvey}
+                <Row>
+                    <Col className="form-inline">
+                        {iconSurvey}
+                    </Col>
+                    <Col>
+                        <div inline className="title form-inline my-2 my-lg-0 mx-auto d-sm-block">
+                            {props.title}
+                        </div>
+                    </Col>
+                </Row>
             </Navbar.Brand>
-            <div inline className="title form-inline my-2 my-lg-0 mx-auto d-sm-block">
-                {props.title}
-            </div>
             <Navbar.Brand className="navbar-nav ml-md-auto">
                 <span className="text-white justify-content-center align-self-center ">{props.message}</span>
                 <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip-disabled">Login!</Tooltip>}>

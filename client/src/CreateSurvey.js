@@ -7,46 +7,6 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 import { arrowUp, arrowDown, deleteIcon } from './Icons.js'
 
-/*
-questions: [
-      {
-        question: "How are you?",
-        answers: ["Good", "Tired", "Bored"],
-        numAnswers: 3,
-        min: 0,
-        max: -1,
-        responses: [
-          {
-            response: [0, 1, 0]
-          },
-          {
-            response: [1, 0, 0]
-          },
-          {
-            response: [0, 0, 1]
-          },
-        ]
-      },
-      {
-        question: "Describe your day?",
-        answers: ["I've been programming a web app all day!"],
-        min: 0,
-        max: -1,
-        responses: [
-          {
-            response: ["nothing to do"]
-          },
-          {
-            response: ["study all day"]
-          },
-          {
-            response: ["crazy"]
-          },
-        ]
-      }
-    ]
-*/
-
 
 function CreateSurvey(props) {
     // global use states needed througout the whole page
