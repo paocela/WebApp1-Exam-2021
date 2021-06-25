@@ -279,7 +279,6 @@ function App() {
   // global useState for handling of users, surveys and admins
   const [loggedIn, setLoggedIn] = useState(false); // TODO set to false when completed
   const [errorMessage, setErrorMessage] = useState('');
-  const [message, setMessage] = useState('');
   const [surveyList, setSurveyList] = useState([]);
   const [currentSurvey, setCurrentSurvey] = useState([])
   const [currentSurveyIndex, setCurrentSurveyIndex] = useState(0);
@@ -293,6 +292,8 @@ function App() {
   const [errorMessageClosed, setErrorMessageClosed] = useState("");
   const [errorMessageOpen, setErrorMessageOpen] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
+  const [submitSurveyMessage, setSubmitSurveyMessage] = useState(""); // message to confirm survey submission OR to inform admin he/she can't select empty survey
+  const [colorSubmitSurveyMessage, setColorSubmitSurveyMessage] = useState(""); // either danger or yellow
 
   /* 
   GET use effect. It performs 2 operations:
@@ -376,9 +377,7 @@ function App() {
     try {
       const user = await logIn(credentials);
       setLoggedIn(true);
-      setMessage({ msg: `Welcome, ${user}!`, type: 'success' });
     } catch (err) {
-      setMessage({ msg: err, type: 'danger' });
     }
   }
 
@@ -386,7 +385,7 @@ function App() {
     if (loggedIn) {
       await logOut();
       setLoggedIn(false);
-      // clean up everything
+      setSubmitSurveyMessage("");
     }
   }
 
@@ -444,7 +443,7 @@ function App() {
                 <Container fluid>
                   <NavBar title="Survey Manager" doLogOut={doLogOut} />
                   <Row>
-                    <LeftSide setErrorMessageUsername={setErrorMessageUsername} setErrorMessageClosed={setErrorMessageClosed} setErrorMessageOpen={setErrorMessageOpen} setValidationMessage={setValidationMessage} setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={false} setIndexCurrentUser={setIndexCurrentUser} setResponses={setResponses} />
+                    <LeftSide colorSubmitSurveyMessage={colorSubmitSurveyMessage} submitSurveyMessage={submitSurveyMessage} setSubmitSurveyMessage={setSubmitSurveyMessage} setErrorMessageUsername={setErrorMessageUsername} setErrorMessageClosed={setErrorMessageClosed} setErrorMessageOpen={setErrorMessageOpen} setValidationMessage={setValidationMessage} setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={false} setIndexCurrentUser={setIndexCurrentUser} setResponses={setResponses} />
                     <RightSide errorMessageUsername={errorMessageUsername} errorMessageClosed={errorMessageClosed} errorMessageOpen={errorMessageOpen} validationMessage={validationMessage} setErrorMessageUsername={setErrorMessageUsername} setErrorMessageClosed={setErrorMessageClosed} setErrorMessageOpen={setErrorMessageOpen} setValidationMessage={setValidationMessage} currentSurvey={currentSurvey} currentSurveyIndex={currentSurveyIndex} surveyList={surveyList} responses={responses} setResponses={setResponses} />
                   </Row>
                 </Container>
@@ -464,7 +463,7 @@ function App() {
                 <Container fluid >
                   <NavBar title="Survey Manager - Admin" doLogOut={doLogOut} />
                   <Row>
-                    <LeftSide setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={true} setIndexCurrentUser={setIndexCurrentUser} setGetUsersTrigger={setGetUsersTrigger} setLoadingAdmin={setLoadingAdmin} />
+                    <LeftSide colorSubmitSurveyMessage={colorSubmitSurveyMessage} setColorSubmitSurveyMessage={setColorSubmitSurveyMessage} submitSurveyMessage={submitSurveyMessage} setSubmitSurveyMessage={setSubmitSurveyMessage} setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={true} setIndexCurrentUser={setIndexCurrentUser} setGetUsersTrigger={setGetUsersTrigger} setLoadingAdmin={setLoadingAdmin} />
                     <RightSideAdmin currentSurvey={currentSurvey} indexCurrentUser={indexCurrentUser} setIndexCurrentUser={setIndexCurrentUser} />
                   </Row>
                 </Container>
@@ -481,7 +480,7 @@ function App() {
               <React.Fragment>
                 <NavBar title="Survey Manager - Admin" doLogOut={doLogOut} />
                 <Row>
-                  <CreateSurvey setLoadingAdmin={setLoadingAdmin} setPostNewSurveyTrigger={setPostNewSurveyTrigger} surveyList={surveyList} setSurveyList={setSurveyList} />
+                  <CreateSurvey setColorSubmitSurveyMessage={setColorSubmitSurveyMessage} setSubmitSurveyMessage={setSubmitSurveyMessage} setLoadingAdmin={setLoadingAdmin} setPostNewSurveyTrigger={setPostNewSurveyTrigger} surveyList={surveyList} setSurveyList={setSurveyList} />
                 </Row>
               </React.Fragment>
               : <Redirect to="/login" />}

@@ -95,26 +95,20 @@ function RightSideAdmin(props) {
         <React.Fragment>
             <Col sm={8} className="below-nav vheight-100">
                 <Row>
-                    <Col><h2>{props.currentSurvey.Title}</h2></Col>
-                    <Col></Col>
-                    <Col>
-                        <Row>
-                            <Col>
-                                <OverlayTrigger placement="left" overlay={<Tooltip id="tooltip-disabled">Previous!</Tooltip>}>
-                                    <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { calculateNextUser(0) }}>{switchUserLeft}</Button>
-                                </OverlayTrigger>
-                            </Col>
-                            <Col>
-                                <h4>
-                                    <Badge pill variant="primary">User: {props.currentSurvey.Users[props.indexCurrentUser]}</Badge>
-                                </h4>
-                            </Col>
-                            <Col>
-                                <OverlayTrigger placement="right" overlay={<Tooltip id="tooltip-disabled">Next!</Tooltip>}>
-                                    <Button className="btn btn-md switch-user-left form-inline" variant="outline-primary" onClick={() => { calculateNextUser(1) }}>{switchUserRight}</Button>
-                                </OverlayTrigger>
-                            </Col>
-                        </Row>
+                    <Col sm={3}><h2>{props.currentSurvey.Title}</h2></Col>
+                    <Col sm={1}></Col>
+                    <Col sm={8} className='justify-content-end form-inline'>
+                        <h3>
+                            <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-disabled">Username!</Tooltip>}>
+                                <Badge pill variant="primary">{props.currentSurvey.Users[props.indexCurrentUser]}</Badge>
+                            </OverlayTrigger>
+                        </h3>
+                        <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-disabled">Previous!</Tooltip>}>
+                            <Button className="btn btn-md switch-user-left" variant="outline-primary" onClick={() => { calculateNextUser(0) }}>{switchUserLeft}</Button>
+                        </OverlayTrigger>
+                        <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-disabled">Next!</Tooltip>}>
+                            <Button className="btn btn-md switch-user-left form-inline" variant="outline-primary" onClick={() => { calculateNextUser(1) }}>{switchUserRight}</Button>
+                        </OverlayTrigger>
                     </Col>
                 </Row>
                 <ListGroup variant="flush">

@@ -87,6 +87,8 @@ function CreateSurvey(props) {
         props.setLoadingAdmin(true);
         props.setPostNewSurveyTrigger((x) => (!x));
         setSurveyTitle("");
+        props.setSubmitSurveyMessage("Survey submitted correctly");
+        props.setColorSubmitSurveyMessage("success");
         setQuestionList([]);
         setSubmitted(true);
     }

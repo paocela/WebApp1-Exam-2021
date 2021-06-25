@@ -1,7 +1,7 @@
 import { ListGroup } from 'react-bootstrap'
 import './App.css';
 import './LeftSide.css';
-import { Col, Row, Button, Badge } from "react-bootstrap"
+import { Col, Row, Button, Badge, Alert } from "react-bootstrap"
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -16,19 +16,27 @@ function LeftSide(props) {
                 {props.surveyList.map(
                     (x, index) => {
 
-                        return (<SurveyRow setErrorMessageUsername={props.setErrorMessageUsername} setErrorMessageClosed={props.setErrorMessageClosed} setErrorMessageOpen={props.setErrorMessageOpen} setValidationMessage={props.setValidationMessage} setCurrentSurveyIndex={props.setCurrentSurveyIndex} index={index} survey={x} currentSurvey={props.currentSurvey} setCurrentSurvey={props.setCurrentSurvey} key={x} admin={props.admin} setIndexCurrentUser={props.setIndexCurrentUser} setResponses={props.setResponses} setGetUsersTrigger={props.setGetUsersTrigger} setLoadingAdmin={props.setLoadingAdmin} />)
+                        return (<SurveyRow setColorSubmitSurveyMessage={props.setColorSubmitSurveyMessage} setSubmitSurveyMessage={props.setSubmitSurveyMessage} setErrorMessageUsername={props.setErrorMessageUsername} setErrorMessageClosed={props.setErrorMessageClosed} setErrorMessageOpen={props.setErrorMessageOpen} setValidationMessage={props.setValidationMessage} setCurrentSurveyIndex={props.setCurrentSurveyIndex} index={index} survey={x} currentSurvey={props.currentSurvey} setCurrentSurvey={props.setCurrentSurvey} key={x} admin={props.admin} setIndexCurrentUser={props.setIndexCurrentUser} setResponses={props.setResponses} setGetUsersTrigger={props.setGetUsersTrigger} setLoadingAdmin={props.setLoadingAdmin} />)
                     })
                 }
-                <ListGroup.Item className="bg-transparent">
-                    <div>
 
-                        {!props.admin ? "" :
+
+                {!props.admin ? "" :
+                    <>
+                        <ListGroup.Item className="bg-transparent">
                             <Link type="submit" to="/admin/create" key="/admin/create">
                                 <Button className="btn btn-new-survey btn-md btn-block" variant="outline-primary" onClick={() => { }}>ADD NEW SURVEY</Button>
                             </Link>
-                        }
-                    </div>
-                </ListGroup.Item>
+                        </ListGroup.Item>
+                        {props.submitSurveyMessage ?
+                            <ListGroup.Item className="bg-transparent">
+                                <Alert variant={props.colorSubmitSurveyMessage}>{props.submitSurveyMessage}</Alert>
+                            </ListGroup.Item>
+                            : ''}
+                    </>
+
+                }
+
             </ListGroup>
         </Col>
     );
@@ -44,7 +52,7 @@ function SurveyRow(props) {
     }
 
     // select currect active list element
-    if (props.currentSurvey.Title === props.survey.Title) {
+    if (props.currentSurvey.Id === props.survey.Id) {
         active = true;
     }
 
@@ -56,6 +64,10 @@ function SurveyRow(props) {
                 props.setCurrentSurvey(props.survey);
                 props.setGetUsersTrigger((x) => (!x));
                 props.setLoadingAdmin(true);
+                props.setSubmitSurveyMessage("");
+            } else if (props.survey.NumberResponses == 0) {
+                props.setSubmitSurveyMessage("This survey has no responses yet");
+                props.setColorSubmitSurveyMessage("warning");
             }
         } else {
             props.setCurrentSurveyIndex(props.index);
