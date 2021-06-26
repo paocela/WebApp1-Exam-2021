@@ -4,275 +4,18 @@ import './App.css';
 import NavBar from './NavBar';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
-import Alert from 'react-bootstrap/Alert';
-import { Badge } from 'react-bootstrap'
 import { useState, useEffect } from 'react';
 import React from 'react';
-//import dayjs from 'dayjs';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import { Switch } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
-import { LoginForm, LogoutButton } from './LoginComponents';
+import { LoginForm } from './LoginComponents';
 import LeftSide from './LeftSide';
 import RightSide from './RightSide';
 import RightSideAdmin from './RightSideAdmin';
-import { Col } from 'react-bootstrap';
 import CreateSurvey from './CreateSurvey';
-
-/*let initSurveyList = [
-  {
-    title: "Mood",
-    users: ["paolo", "luca", "laura"],
-    questions: [
-      {
-        question: "How are you?",
-        answers: ["Good", "Tired", "Bored"],
-        numAnswers: 3,
-        min: 0,
-        max: 1,
-        responses: [
-          {
-            response: [0, 1, 0]
-          },
-          {
-            response: [1, 0, 0]
-          },
-          {
-            response: [0, 0, 1]
-          },
-        ]
-      },
-      {
-        question: "Describe your day?",
-        answers: [""],
-        min: 0,
-        max: -1,
-        responses: [
-          {
-            response: ["nothing to do"]
-          },
-          {
-            response: ["study all day"]
-          },
-          {
-            response: ["crazy"]
-          },
-        ]
-      }
-    ],
-  },
-  {
-    title: "Interest",
-    users: ["paolo", "luca", "laura"],
-    questions: [
-      {
-        question: "Your favourite sport? (select 2)",
-        answers: ["Golf", "Basketball", "Soccer", "Others..."],
-        numAnswers: 4,
-        min: 0,
-        max: 3,
-        responses: [
-          {
-            response: [1, 1, 0, 0]
-          },
-          {
-            response: [1, 0, 1, 1]
-          },
-          {
-            response: [0, 0, 1, 0]
-          },
-        ]
-      },
-      {
-        question: "Tell me a story",
-        answers: [""],
-        min: 1,
-        max: -1,
-        responses: [
-          {
-            response: ["no story"]
-          },
-          {
-            response: ["once upon a time in hollywood"]
-          },
-          {
-            response: ["this story is long"]
-          },
-        ]
-      }
-    ]
-  },
-  {
-    title: "Personality",
-    users: ["paolo", "luca", "laura", "gigino"],
-    questions: [
-      {
-        question: "What's your name?",
-        answers: [""],
-        min: 1,
-        max: -1,
-        responses: [
-          {
-            response: ["my name is paolo"]
-          },
-          {
-            response: ["my name is luca"]
-          },
-          {
-            response: ["my name is laura"]
-          },
-          {
-            response: ["my name is gigino"]
-          }
-        ]
-      },
-      {
-        question: "What do you like to eat?",
-        answers: ["Pasta", "Nutella", "Insalata"],
-        numAnswers: 3,
-        min: 0,
-        max: 2,
-        responses: [
-          {
-            response: [0, 1, 0]
-          },
-          {
-            response: [1, 0, 0]
-          },
-          {
-            response: [0, 0, 1]
-          },
-          {
-            response: [1, 0, 1]
-          },
-        ]
-      },
-      {
-        question: "What's your favourite color?",
-        answers: ["Blue", "Red", "Orange", "Yellow", "Black"],
-        numAnswers: 5,
-        min: 1,
-        max: 4,
-        responses: [
-          {
-            response: [0, 1, 0, 1, 1]
-          },
-          {
-            response: [1, 0, 0, 0, 0]
-          },
-          {
-            response: [0, 0, 1, 1, 0]
-          },
-          {
-            response: [0, 1, 0, 1, 0]
-          },
-        ]
-      }
-    ]
-  }
-] */
-
-/*
-[
-  {
-    "Id": 1,
-    "Title": "Mood",
-    "AdminId": 1,
-    "NumberQuestions": 2,
-    "QuestionsAndAnswers": [
-      {
-        "answers": [
-          "Good",
-          "Tired",
-          "Bored"
-        ],
-        "max": 1,
-        "min": 0,
-        "numAnswers": 3,
-        "question": "How are you?"
-      },
-      {
-        "answers": [
-          ""
-        ],
-        "max": -1,
-        "min": 0,
-        "question": "Describe your day?"
-      }
-    ]
-  },
-  {
-    "Id": 2,
-    "Title": "Interest",
-    "AdminId": 1,
-    "NumberQuestions": 2,
-    "QuestionsAndAnswers": [
-      {
-        "question": "Your favourite sport? (select 2)",
-        "answers": [
-          "Golf",
-          "Basketball",
-          "Soccer",
-          "Others..."
-        ],
-        "numAnswers": 3,
-        "min": 0,
-        "max": 3
-      },
-      {
-        "question": "Tell me a story",
-        "answers": [
-          ""
-        ],
-        "min": 1,
-        "max": 1
-      }
-    ]
-  },
-  {
-    "Id": 3,
-    "Title": "Personality",
-    "AdminId": 2,
-    "NumberQuestions": 3,
-    "QuestionsAndAnswers": [
-      {
-        "question": "What's your name?",
-        "answers": [
-          ""
-        ],
-        "min": 1,
-        "max": -1
-      },
-      {
-        "question": "What do you like to eat?",
-        "answers": [
-          "Pasta",
-          "Nutella",
-          "Insalata"
-        ],
-        "numAnswers": 3,
-        "min": 0,
-        "max": 2
-      },
-      {
-        "question": "What's your favourite color?",
-        "answers": [
-          "Blue",
-          "Red",
-          "Orange",
-          "Yellow",
-          "Black"
-        ],
-        "numAnswers": 5,
-        "min": 1,
-        "max": 4
-      }
-    ]
-  }
-] */
 
 
 function App() {
@@ -302,6 +45,7 @@ function App() {
   */
 
   useEffect(() => {
+    // get all surveys
     const fetchAllUser = async (x) => {
       const response = await fetch('/api/surveys');
       const responseBody = await response.json();
@@ -312,6 +56,7 @@ function App() {
       setLoading(false);
       setLoadingAdmin(true);
     }
+    // get surveys created by admin (without responses)
     const fetchAllAdmin = async (x) => {
       const response = await fetch('/api/surveysAdmin');
       const responseBody = await response.json();
@@ -341,8 +86,7 @@ function App() {
       const responseBody = await response.json();
       const res = [...responseBody]
       let temp = [...surveyList];
-      console.log(temp);
-      console.log(currentSurveyIndex);
+      
       // fix number of responses if while in /admin, a user responded to a survey
       // because number of responses on left side is fetched from server only when the page is loaded
       if (res.length != temp[currentSurveyIndex].NumberResponses) {
@@ -421,7 +165,6 @@ function App() {
   return (
     <Router>
       <Switch>
-
         <Route path="/login" render={() =>
           <>{loggedIn ?
             <Redirect to="/admin" /> :
@@ -486,9 +229,6 @@ function App() {
               : <Redirect to="/login" />}
           </>
         } />
-
-
-
       </Switch>
     </Router>
   );

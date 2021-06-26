@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, ListGroup, Button, Badge, InputGroup } from "react-bootstrap";
+import { Form, ListGroup, Button, Badge } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import React from 'react';
@@ -17,6 +17,7 @@ function RightSide(props) {
     const [addResponseTrigger, setAddResponseTrigger] = useState();
     const [isLoaded, setIsLoaded] = useState(false)
 
+    // post request to add survey's response to server
     useEffect(() => {
         const postResponse = async () => {
             const response = await fetch('/api/surveys/' + addResponseTrigger.surveyId, {
@@ -45,7 +46,6 @@ function RightSide(props) {
     function checkFieldsAndSubmit() {
         let errorFound = false;
 
-        // TODO check max 200 chars for open questions
         props.setErrorMessageUsername("");
         props.setErrorMessageOpen("");
         props.setErrorMessageClosed("");
@@ -60,9 +60,12 @@ function RightSide(props) {
             if (props.currentSurvey.QuestionsAndAnswers[questionIndex].max == -1) {
                 // open question
                 if (props.currentSurvey.QuestionsAndAnswers[questionIndex].min == 1 && props.responses[questionIndex] == "") {
-                    props.setErrorMessageOpen((m) => (m + "Mandatory (question " + questionIndex + ") "));
+                    props.setErrorMessageOpen((m) => (m + "Mandatory (q. " + questionIndex + ") "));
                     setMessageColor("danger");
                     errorFound = true;
+                } else if(props.responses[questionIndex].length > 200) {
+                    props.setErrorMessageOpen((m) => (m + "Exceeded max 200 chars (q. " + questionIndex + ") "));
+                    setMessageColor("danger");
                 }
                 
             } else {
@@ -74,12 +77,12 @@ function RightSide(props) {
                     }
                 }
                 if(countTrue < props.currentSurvey.QuestionsAndAnswers[questionIndex].min) {
-                    props.setErrorMessageClosed((m) => (m + "Min value not respected (question " + questionIndex + ") "))
+                    props.setErrorMessageClosed((m) => (m + "Min value not respected (q. " + questionIndex + ") "))
                     setMessageColor("danger");
                     errorFound = true;
                 }
                 if(countTrue > props.currentSurvey.QuestionsAndAnswers[questionIndex].max) {
-                    props.setErrorMessageClosed((m) => (m + "Max value not respected (question " + questionIndex + ") "))
+                    props.setErrorMessageClosed((m) => (m + "Max value not respected (q. " + questionIndex + ") "))
                     setMessageColor("danger");
                     errorFound = true;
                 }
@@ -89,7 +92,6 @@ function RightSide(props) {
             return;
         }
 
-        // in props.responses = array of responses([], [], ...)
         let response = {
             surveyId: props.currentSurvey.Id,
             username: userName,
@@ -116,11 +118,8 @@ function RightSide(props) {
             }
             questions.push(<div><ClosedQuestion singleQuestion={singleQuestion} responses={props.responses} setResponses={props.setResponses} index={index} /><br /></div>)
 
-        } else {
-            // PANIC
         }
     }
-    // Form.Group "Enter username here..." textbox: position to the rigth of the container
     return (
         <React.Fragment>
             <Col sm={8} className="below-nav vheight-100">

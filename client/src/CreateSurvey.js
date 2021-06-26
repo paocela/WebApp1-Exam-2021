@@ -1,8 +1,8 @@
-import { InputGroup, ListGroup } from 'react-bootstrap'
+import { ListGroup } from 'react-bootstrap'
 import './App.css';
 import './LeftSide.css';
 import { Col, Row, Button, Form, Badge, Alert } from "react-bootstrap"
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import React from 'react';
 import { arrowUp, arrowDown, deleteIcon } from './Icons.js'
@@ -17,7 +17,7 @@ function CreateSurvey(props) {
     const [optionalOpen, setOptionalOpen] = useState(""); // set if optional or mandatory
     const [surveyTitle, setSurveyTitle] = useState("");
     const [addSurveyTrigger, setAddSurveyTrigger] = useState();
-    const [isLoaded, setIsLoaded] = useState(false)
+    const [isLoaded, setIsLoaded] = useState(false); // used to avoid doing post request the first time the element is loaded
     const [errorMessageTitle, setErrorMessageTitle] = useState("");
     const [errorMessageAnswers, setErrorMessageAnswers] = useState("");
     const [errorMessageQuestions, setErrorMessageQuestions] = useState("");
@@ -26,6 +26,7 @@ function CreateSurvey(props) {
 
 
 
+    // post request to add new survey to server
     useEffect(() => {
         const postSurvey = async () => {
             const response = await fetch('/api/surveys/', {
@@ -40,9 +41,7 @@ function CreateSurvey(props) {
             }
         }
         if (isLoaded) {
-            postSurvey();
-            // TODO reset states
-
+            postSurvey().then(() => { props.setPostNewSurveyTrigger((x) => (!x)) });
         } else {
             setIsLoaded((x) => !x);
         }
@@ -54,14 +53,19 @@ function CreateSurvey(props) {
 
         setErrorMessageTitle("");
         setErrorMessageAnswers("");
+        setErrorMessageQuestions("");
 
         // sanity checks
         if (surveyTitle == "") {
             setErrorMessageTitle("Please insert title");
             errorFound = true;
         }
+        if (questionList.length == 0) {
+            setErrorMessageQuestions("Please insert questions");
+            errorFound = true;
+        }
         for (let questionIndex in questionList) {
-            if(questionList[questionIndex].question == "") {
+            if (questionList[questionIndex].question == "") {
                 setErrorMessageQuestions("Please fill all questions");
                 errorFound = true;
             }
@@ -76,8 +80,6 @@ function CreateSurvey(props) {
             return;
         }
 
-        // TODO check unicity of survey name
-
         let survey = {
             title: surveyTitle,
             questionsAndAnswers: questionList
@@ -85,7 +87,6 @@ function CreateSurvey(props) {
 
         setAddSurveyTrigger(survey);
         props.setLoadingAdmin(true);
-        props.setPostNewSurveyTrigger((x) => (!x));
         setSurveyTitle("");
         props.setSubmitSurveyMessage("Survey submitted correctly");
         props.setColorSubmitSurveyMessage("success");
@@ -106,6 +107,7 @@ function CreateSurvey(props) {
     );
 }
 
+// right side of CreateSurvey component
 function CreateRightSide(props) {
     let questions = [];
     let singleQuestion;
@@ -150,8 +152,6 @@ function CreateRightSide(props) {
         list.splice(index, 1);
         props.setQuestionList(list);
     }
-
-    // TODO center words / style title
 
     // build questions
     for (let index in props.questionList) {
@@ -308,7 +308,7 @@ function OpenQuestion(props) {
     );
 }
 
-
+// left side of CreateSurvey component
 function CreateLeftSide(props) {
     let [errorMessageClosed, setErrorMessageClosed] = useState("");
     let [errorMessageOpen, setErrorMessageOpen] = useState("");
@@ -329,7 +329,7 @@ function CreateLeftSide(props) {
         // closed question --> questionType = 0
         if (questionType == 0) {
 
-            // TODO check input and display error with message
+            // check input and display error with message
             if (props.minClosed == "" || props.maxClosed == "" || props.numberAnswers == "") {
                 setErrorMessageClosed("Input cannot be NULL or non numeric");
                 return;
@@ -363,7 +363,7 @@ function CreateLeftSide(props) {
 
         } else {
 
-            // TODO check input and display error with message
+            // check input and display error with message
             if (props.optionalOpen == "") {
                 setErrorMessageOpen("Input cannot be NULL");
                 return;
@@ -386,8 +386,6 @@ function CreateLeftSide(props) {
 
             props.setQuestionList((l) => ([...l, question]));
         }
-
-        // open question --> questionType = 1;
     };
 
     return (

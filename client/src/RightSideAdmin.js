@@ -8,50 +8,6 @@ import Col from "react-bootstrap/Col"
 import Row from "react-bootstrap/Row"
 import Button from "react-bootstrap/Button"
 
-/* Survey Example Format
-  {
-    title: "Mood",
-    users: ["paolo", "luca", "laura"],
-    questions: [
-      {
-        question: "How are you?",
-        answers: ["Good", "Tired", "Bored"],
-        min: 0,
-        max: -1,
-        responses: [
-          {
-            response: [0, 1, 0]
-          },
-          {
-            response: [1, 0, 0]
-          },
-          {
-            response: [0, 0, 1]
-          },
-        ]
-      },
-      {
-        question: "Describe your day?",
-        answers: ["I've been programming a web app all day!"],
-        min: 0,
-        max: -1,
-        responses: [
-          {
-            response: ["nothing to do"]
-          },
-          {
-            response: ["study all day"]
-          },
-          {
-            response: ["crazy"]
-          },
-        ]
-      }
-    ],
-  },
-*/
-
-
 function RightSideAdmin(props) {
     let questions = [];
     let singleQuestion;
@@ -90,7 +46,6 @@ function RightSideAdmin(props) {
         }
     }
 
-    // TODO Form.Group "Enter username here..." textbox: position to the rigth of the container
     return (
         <React.Fragment>
             <Col sm={8} className="below-nav vheight-100">
@@ -130,7 +85,6 @@ function ClosedQuestion(props) {
     // build answers for single question
     for (let index in props.singleQuestion.answers) {
         answer = props.singleQuestion.answers[index];
-        // TODO: fix radio buttons (don't force single option and don't allow to deselect, for optional case)
         answerRowList.push(<ListGroup.Item as="li">
             <Form.Check type={"checkbox"} checked={props.singleQuestion.responses[props.indexCurrentUser].response[index]} label={answer} id={answer} />
         </ListGroup.Item>);
