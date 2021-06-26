@@ -86,7 +86,6 @@ function App() {
       const responseBody = await response.json();
       const res = [...responseBody]
       let temp = [...surveyList];
-      
       // fix number of responses if while in /admin, a user responded to a survey
       // because number of responses on left side is fetched from server only when the page is loaded
       if (res.length != temp[currentSurveyIndex].NumberResponses) {
@@ -119,7 +118,7 @@ function App() {
   // functions to handle login and logout - interact with server
   const doLogIn = async (credentials) => {
     try {
-      const user = await logIn(credentials);
+      await logIn(credentials);
       setLoggedIn(true);
     } catch (err) {
     }

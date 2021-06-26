@@ -111,8 +111,6 @@ app.get('/api/surveysAdmin/:surveyId', isLoggedIn, async (req, res) => {
 // POST /api/surveys/<surveyId>
 // submit a new response for a given survey (identified with surveyId <surveyId>)
 app.post('/api/surveys/:surveyId', async (req, res) => {
-
-
   // create task
   let response = {
       SurveyId: req.body.surveyId,
@@ -132,18 +130,6 @@ app.post('/api/surveys/:surveyId', async (req, res) => {
 // POST /api/surveys
 // Create and add a single survey (passed) to the list of surveys
 app.post('/api/surveys', isLoggedIn, async (req, res) => {
-
-  /*
-  pass object like
-  {
-    title: 1,
-    questionsAndAnswers: [...]
-    ]
-  }
-  */
-
-  // TODO add query to search for survey with same name --> if found, return specific code and show message to client admin
-
   // create survey
   let survey = {
       Title: req.body.title,

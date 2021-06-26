@@ -2,8 +2,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import './NavBar.css';
 import { iconSurvey, iconLogin, iconLogout } from './Icons.js'
-import { Container, Form, FormControl, OverlayTrigger, Tooltip, Row, Col } from "react-bootstrap";
-import { Redirect } from "react-router";
+import { OverlayTrigger, Tooltip, Row, Col } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 
 

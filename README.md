@@ -25,7 +25,7 @@
 * **Response**: `200 Valid Access` (success)<br/>
   **Response body**: *none*
 * **Error response**: `500 Internal Server Error` (generic error)<br/>
-`422 Unprocessable entity` (validation error)
+`401 Unprocessable entity` (validation error)
 
 ### Retrieve all available surveys
 
@@ -36,42 +36,39 @@
 * **Response**: `200 OK` (success) - Return an array of JSON object representing each survey <br/>
   **Response body**:
 ```
-  {
-    title: "Mood",
-    questions: [
-      {
-        question: "How are you?",
-        answers: ["Good", "Tired", "Bored"],
-        numAnswers: 3,
-        min: 0,
-        max: 1,
-      },
-      {
-        question: "Describe your day?",
-        answers: [""],
-        min: 0,
-        max: -1,
-      }
-    ],
-  },
-  {
-    title: "Interest",
-    questions: [
-      {
-        question: "Your favourite sport? (select 2)",
-        answers: ["Golf", "Basketball", "Soccer", "Others..."],
-        numAnswers: 4,
-        min: 0,
-        max: 3,
-      },
-      {
-        question: "Tell me a story",
-        answers: [""],
-        min: 1,
-        max: -1,
-      }
-    ]
-  } 
+[{
+  "Id": 1,
+  "Title": "Mood",
+  "NumberQuestions": 2,
+  "QuestionsAndAnswers": [{
+    "answers": ["Good", "Tired", "Bored"],
+    "max": 1,
+    "min": 0,
+    "numAnswers": 3,
+    "question": "How are you?"
+  }, {
+    "answers": [""],
+    "max": -1,
+    "min": 0,
+    "question": "Describe your day?"
+  }]
+}, {
+  "Id": 2,
+  "Title": "Interest",
+  "NumberQuestions": 2,
+  "QuestionsAndAnswers": [{
+    "question": "Your favourite sport? (select 2)",
+    "answers": ["Golf", "Basketball", "Soccer", "Others..."],
+    "numAnswers": 4,
+    "min": 0,
+    "max": 3
+  }, {
+    "question": "Tell me a story",
+    "answers": [""],
+    "min": 1,
+    "max": -1
+  }]
+}]
 ```
 * **Error response**: `500 Internal Server Error` (generic error)
 
@@ -84,42 +81,39 @@
 * **Response**: `200 OK` (success) - Return an array of JSON object representing each survey <br/>
   **Response body**:
 ```
-  {
-    title: "Mood",
-    questions: [
-      {
-        question: "How are you?",
-        answers: ["Good", "Tired", "Bored"],
-        numAnswers: 3,
-        min: 0,
-        max: 1,
-      },
-      {
-        question: "Describe your day?",
-        answers: [""],
-        min: 0,
-        max: -1,
-      }
-    ],
-  },
-  {
-    title: "Interest",
-    questions: [
-      {
-        question: "Your favourite sport? (select 2)",
-        answers: ["Golf", "Basketball", "Soccer", "Others..."],
-        numAnswers: 4,
-        min: 0,
-        max: 3,
-      },
-      {
-        question: "Tell me a story",
-        answers: [""],
-        min: 1,
-        max: -1,
-      }
-    ]
-  } 
+  [{
+  "Id": 1,
+  "Title": "Mood",
+  "NumberQuestions": 2,
+  "QuestionsAndAnswers": [{
+    "answers": ["Good", "Tired", "Bored"],
+    "max": 1,
+    "min": 0,
+    "numAnswers": 3,
+    "question": "How are you?"
+  }, {
+    "answers": [""],
+    "max": -1,
+    "min": 0,
+    "question": "Describe your day?"
+  }]
+}, {
+  "Id": 2,
+  "Title": "Interest",
+  "NumberQuestions": 2,
+  "QuestionsAndAnswers": [{
+    "question": "Your favourite sport? (select 2)",
+    "answers": ["Golf", "Basketball", "Soccer", "Others..."],
+    "numAnswers": 4,
+    "min": 0,
+    "max": 3
+  }, {
+    "question": "Tell me a story",
+    "answers": [""],
+    "min": 1,
+    "max": -1
+  }]
+}]
 ```
 * **Error response**: `500 Internal Server Error` (generic error)
 
@@ -130,51 +124,80 @@
 * **Request**: GET /api/surveys/< surveyId><br/>
   **Request body**:*none*
 
-* **Response**: `200 Updated` (success)<br/>
+* **Response**: `200 OK` (success)<br/>
   **Response body**:  A JSON object representing the responses to a given survey (Content-Type: `application/json`)
 ```
-{
-    users: ["paolo", "luca", "laura"],
-    questions: [
-      {
-        responses: [
-          [0, 1, 0],
-          [0, 0, 1],
-          [1, 0, 0]
-        ]
-      },
-      {
-        responses: [
-          ["nothing to do"],
-          ["study all day"],
-          ["crazy"]
-        ]
-      }
-    ]
-}
+[
+  {
+    "Id": 7,
+    "SurveyId": 3,
+    "Username": "Paolo",
+    "Response": [
+      "my name is paolo",
+      [
+        true,
+        false,
+        false
+      ],
+      [
+        false,
+        true,
+        false,
+        true,
+        false
+      ]
+    ],
+    "AdminId": 2
+  },
+  {
+    "Id": 8,
+    "SurveyId": 3,
+    "Username": "Luca",
+    "Response": [
+      "my name is luca",
+      [
+        false,
+        false,
+        true
+      ],
+      [
+        false,
+        false,
+        true,
+        false,
+        false
+      ]
+    ],
+    "AdminId": 2
+  }
+]
 ```
 * **Error response**: `500 Internal Server Error` (generic error)<br/>
-`422 Unprocessable entity` (validation error)
+`404 Unprocessable entity` (validation error)<br/>
+`401 Anauthorized` (authorization error)
 
-### Submit new answer to a survey
+### Submit new response to a survey
 
 * **POST**: `/api/surveys/<surveyId>`
-* **Description**: submit a new answer for a given survey (identified with surveyId <surveyId>)
+* **Description**: submit a new response for a given survey (identified with surveyId <surveyId>)
 * **Request**: POST /api/surveys/< surveyId><br/>
-  **Request body**: A JSON object representing the answer (Content-Type: `application/json`)
+  **Request body**: A JSON object representing the response (Content-Type: `application/json`)
 ```
 {
-    user: "paolo",
-    responses: [
-      [0, 1, 0],
-      "Nothing to do"
+  "surveyId": 21,
+  "username": "Max",
+  "response": [
+    [
+      false,
+      true,
+      false
     ]
+  ]
 }
 ```
 * **Response**: `200 Created` (success)<br/>
   **Response body**: *none*
-* **Error response**: `500 Internal Server Error` (generic error)<br/>
-`422 Unprocessable entity` (validation error)
+* **Error response**: `500 Internal Server Error` (generic error)
 
 ### Create new survey
 
@@ -184,46 +207,33 @@
   **Request body**: A JSON object representing the survey (Content-Type: `application/json`)
 ```
 {
-    title: "Mood",
-    questions: [
-      {
-        question: "How are you?",
-        answers: ["Good", "Tired", "Bored"],
-        numAnswers: 3,
-        min: 0,
-        max: 1,
-      },
-      {
-        question: "Describe your day?",
-        answers: [""],
-        min: 0,
-        max: -1,
-      }
-    ],
-  },
-  {
-    title: "Interest",
-    questions: [
-      {
-        question: "Your favourite sport? (select 2)",
-        answers: ["Golf", "Basketball", "Soccer", "Others..."],
-        numAnswers: 4,
-        min: 0,
-        max: 3,
-      },
-      {
-        question: "Tell me a story",
-        answers: [""],
-        min: 1,
-        max: -1,
-      }
-    ]
-  } 
+  "title": "Holiday",
+  "questionsAndAnswers": [
+    {
+      "question": "Where do you prefer to spend your summer vacations?",
+      "answers": [
+        "Sea",
+        "Mountains",
+        "Others..."
+      ],
+      "numberAnswers": "3",
+      "min": "1",
+      "max": "1"
+    },
+    {
+      "question": "Describe your last summer vacation",
+      "answers": [
+        ""
+      ],
+      "min": 1,
+      "max": -1
+    }
+  ]
+}
 ```
 * **Response**: `200 Created` (success)<br/>
   **Response body**: *none*
-* **Error response**: `500 Internal Server Error` (generic error)<br/>
-`422 Unprocessable entity` (validation error)
+* **Error response**: `500 Internal Server Error` (generic error)
 
 
 ## Database Tables

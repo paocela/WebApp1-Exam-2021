@@ -38,6 +38,11 @@ function CreateSurvey(props) {
             });
             if (response.status == 500) {
                 console.log(response.err);
+                props.setSubmitSurveyMessage(response.err);
+                props.setColorSubmitSurveyMessage("danger");
+            } else {
+                props.setSubmitSurveyMessage("Survey submitted correctly");
+                props.setColorSubmitSurveyMessage("success");
             }
         }
         if (isLoaded) {
@@ -88,8 +93,6 @@ function CreateSurvey(props) {
         setAddSurveyTrigger(survey);
         props.setLoadingAdmin(true);
         setSurveyTitle("");
-        props.setSubmitSurveyMessage("Survey submitted correctly");
-        props.setColorSubmitSurveyMessage("success");
         setQuestionList([]);
         setSubmitted(true);
     }
@@ -159,7 +162,7 @@ function CreateRightSide(props) {
         if (singleQuestion.max == -1) {
             // open question
             questions.push(<div>
-                <Row>
+                <Row key={index}>
                     <Col sm={11}>
                         <OpenQuestion singleQuestion={singleQuestion} setQuestionList={props.setQuestionList} questionList={props.questionList} index={index} /><br />
                     </Col>
@@ -180,7 +183,7 @@ function CreateRightSide(props) {
         } else {
             // closed question
             questions.push(<div>
-                <Row>
+                <Row key={index}>
                     <Col sm={11}>
                         <ClosedQuestion singleQuestion={singleQuestion} setQuestionList={props.setQuestionList} questionList={props.questionList} index={index} /><br />
                     </Col>
@@ -238,8 +241,6 @@ function CreateRightSide(props) {
 
 function ClosedQuestion(props) {
     let answerRowList = [];
-    let answer;
-    let singleQuestion;
 
     let handleQuestionAnswers = i => (event) => {
         let temp = [...props.questionList];
@@ -255,7 +256,7 @@ function ClosedQuestion(props) {
 
     for (let i = 0; i < props.singleQuestion.numberAnswers; i++) {
         answerRowList.push(<ListGroup.Item as="li">
-            <Row>
+            <Row key={i}>
                 <Col className="form-element" sm={2}>Answer {i}:</Col>
                 <Col sm={10}>
                     <Form.Control size="md" onChange={handleQuestionAnswers(i)} value={props.singleQuestion.answers[i]} placeholder="..." />
@@ -282,16 +283,10 @@ function ClosedQuestion(props) {
 }
 
 function OpenQuestion(props) {
-    let optional = "mandatory";
-
     const handleQuestionTitle = (event) => {
         let temp = [...props.questionList];
         temp[props.index].question = event.target.value;
         props.setQuestionList(temp);
-    }
-
-    if (props.singleQuestion.min == 0) {
-        optional = "optional";
     }
 
     return (
@@ -324,7 +319,7 @@ function CreateLeftSide(props) {
 
 
         // insert new question
-        let optional, multiple;
+        let optional;
 
         // closed question --> questionType = 0
         if (questionType == 0) {
