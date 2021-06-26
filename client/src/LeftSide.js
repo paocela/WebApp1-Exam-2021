@@ -15,7 +15,7 @@ function LeftSide(props) {
             <ListGroup variant="flush" className="trans">
                 {props.surveyList.map(
                     (x, index) => {
-                        return (<SurveyRow key={index} setColorSubmitSurveyMessage={props.setColorSubmitSurveyMessage} setSubmitSurveyMessage={props.setSubmitSurveyMessage} setErrorMessageUsername={props.setErrorMessageUsername} setErrorMessageClosed={props.setErrorMessageClosed} setErrorMessageOpen={props.setErrorMessageOpen} setValidationMessage={props.setValidationMessage} setCurrentSurveyIndex={props.setCurrentSurveyIndex} index={index} survey={x} currentSurvey={props.currentSurvey} setCurrentSurvey={props.setCurrentSurvey} key={x} admin={props.admin} setIndexCurrentUser={props.setIndexCurrentUser} setResponses={props.setResponses} setGetUsersTrigger={props.setGetUsersTrigger} setLoadingAdmin={props.setLoadingAdmin} />)
+                        return (<SurveyRow key={x.Id} setColorSubmitSurveyMessage={props.setColorSubmitSurveyMessage} setSubmitSurveyMessage={props.setSubmitSurveyMessage} setErrorMessageUsername={props.setErrorMessageUsername} setErrorMessageClosed={props.setErrorMessageClosed} setErrorMessageOpen={props.setErrorMessageOpen} setValidationMessage={props.setValidationMessage} setCurrentSurveyIndex={props.setCurrentSurveyIndex} index={index} survey={x} currentSurvey={props.currentSurvey} setCurrentSurvey={props.setCurrentSurvey} key={x} admin={props.admin} setIndexCurrentUser={props.setIndexCurrentUser} setResponses={props.setResponses} setGetUsersTrigger={props.setGetUsersTrigger} setLoadingAdmin={props.setLoadingAdmin} />)
                     })
                 }
                 {!props.admin ? "" :
