@@ -19,6 +19,12 @@ function LoginForm(props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  // reset states error messages
+  props.setValidationMessage("");
+  props.setErrorMessageUsername("");
+  props.setErrorMessageClosed("");
+  props.setErrorMessageOpen("");
+
   // function to handle submit of login form - will interact with app and then with server
   const handleSubmit = (event) => {
     let valid = true;

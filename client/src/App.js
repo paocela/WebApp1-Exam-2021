@@ -37,6 +37,8 @@ function App() {
   const [validationMessage, setValidationMessage] = useState("");
   const [submitSurveyMessage, setSubmitSurveyMessage] = useState(""); // message to confirm survey submission OR to inform admin he/she can't select empty survey
   const [colorSubmitSurveyMessage, setColorSubmitSurveyMessage] = useState(""); // either danger or yellow
+  const [adminNoSurveys, setAdminNoSurveys] = useState(false); // used to redirect admin to create survey if it doesn't have any surveys yet
+  const [adminNoResponses, setAdminNoResponses] = useState(false); // used to show only leftside when the survey has no responses
 
   /* 
   GET use effect. It performs 2 operations:
@@ -61,11 +63,15 @@ function App() {
       const response = await fetch('/api/surveysAdmin');
       const responseBody = await response.json();
       const res = responseBody;
-      setSurveyList(res);
-      setCurrentSurvey(res[0]);
-      setCurrentSurveyIndex(0);
-      setIndexCurrentUser(0);
-      setLoading(false);
+      if(res.length == 0) {
+        setAdminNoSurveys(true);
+      } else {
+        setSurveyList(res);
+        setCurrentSurvey(res[0]);
+        setCurrentSurveyIndex(0);
+        setIndexCurrentUser(0);
+        setLoading(false);
+      }
     }
     if (loggedIn) {
       fetchAllAdmin().then(() => { setGetUsersTrigger((x) => (!x)) });
@@ -86,6 +92,12 @@ function App() {
       const responseBody = await response.json();
       const res = [...responseBody]
       let temp = [...surveyList];
+      if(res.length == 0) {
+        setAdminNoResponses(true);
+      } else {
+        setAdminNoResponses(false);
+      }
+
       // fix number of responses if while in /admin, a user responded to a survey
       // because number of responses on left side is fetched from server only when the page is loaded
       if (res.length != temp[currentSurveyIndex].NumberResponses) {
@@ -168,7 +180,7 @@ function App() {
           <>{loggedIn ?
             <Redirect to="/admin" /> :
             <>
-              <LoginForm login={doLogIn} setErrorMessage={setErrorMessage} errorMessage={errorMessage} />
+              <LoginForm login={doLogIn} setErrorMessage={setErrorMessage} errorMessage={errorMessage} setValidationMessage={setValidationMessage} setErrorMessageUsername={setErrorMessageUsername} setErrorMessageClosed={setErrorMessageClosed} setErrorMessageOpen={setErrorMessageOpen}/>
             </>
           }</>
 
@@ -195,22 +207,33 @@ function App() {
         } />
 
         <Route exact path="/admin" render={() =>
-          <>{
-            loggedIn ?
-              loadingAdmin ? <Container fluid>
-                <Spinner animation="border" variant="primary" />
-                <span>   Please wait, loading your surveys manager...   </span>
-                <Spinner animation="border" variant="primary" />
-              </Container> :
+          <>{ /*
+            if adminNoSurvey: redirect admin to create survey page
+            if adminNoResponses: show only left side component and not right side
+            */
+            adminNoSurveys ? <Redirect to="/admin/create" /> : 
+              loggedIn ?
+                loadingAdmin ? <Container fluid>
+                  <Spinner animation="border" variant="primary" />
+                  <span>   Please wait, loading your surveys manager...   </span>
+                  <Spinner animation="border" variant="primary" />
+                </Container> :
+                adminNoResponses ? 
                 <Container fluid >
-                  <NavBar title="Survey Manager - Admin" doLogOut={doLogOut} />
-                  <Row>
-                    <LeftSide colorSubmitSurveyMessage={colorSubmitSurveyMessage} setColorSubmitSurveyMessage={setColorSubmitSurveyMessage} submitSurveyMessage={submitSurveyMessage} setSubmitSurveyMessage={setSubmitSurveyMessage} setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={true} setIndexCurrentUser={setIndexCurrentUser} setGetUsersTrigger={setGetUsersTrigger} setLoadingAdmin={setLoadingAdmin} />
-                    <RightSideAdmin currentSurvey={currentSurvey} indexCurrentUser={indexCurrentUser} setIndexCurrentUser={setIndexCurrentUser} />
-                  </Row>
-                </Container>
-              :
-              <Redirect to="/login" />
+                    <NavBar title="Survey Manager - Admin" doLogOut={doLogOut} />
+                    <Row>
+                      <LeftSide colorSubmitSurveyMessage={colorSubmitSurveyMessage} setColorSubmitSurveyMessage={setColorSubmitSurveyMessage} submitSurveyMessage={submitSurveyMessage} setSubmitSurveyMessage={setSubmitSurveyMessage} setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={true} setIndexCurrentUser={setIndexCurrentUser} setGetUsersTrigger={setGetUsersTrigger} setLoadingAdmin={setLoadingAdmin} />
+                    </Row>
+                  </Container> :
+                  <Container fluid >
+                    <NavBar title="Survey Manager - Admin" doLogOut={doLogOut} />
+                    <Row>
+                      <LeftSide colorSubmitSurveyMessage={colorSubmitSurveyMessage} setColorSubmitSurveyMessage={setColorSubmitSurveyMessage} submitSurveyMessage={submitSurveyMessage} setSubmitSurveyMessage={setSubmitSurveyMessage} setCurrentSurveyIndex={setCurrentSurveyIndex} surveyList={surveyList} currentSurvey={currentSurvey} setCurrentSurvey={setCurrentSurvey} admin={true} setIndexCurrentUser={setIndexCurrentUser} setGetUsersTrigger={setGetUsersTrigger} setLoadingAdmin={setLoadingAdmin} />
+                      <RightSideAdmin currentSurvey={currentSurvey} indexCurrentUser={indexCurrentUser} setIndexCurrentUser={setIndexCurrentUser} />
+                    </Row>
+                  </Container>
+                :
+                <Redirect to="/login" />
           }
           </>
         } />
@@ -222,7 +245,7 @@ function App() {
               <React.Fragment>
                 <NavBar title="Survey Manager - Admin" doLogOut={doLogOut} />
                 <Row>
-                  <CreateSurvey setColorSubmitSurveyMessage={setColorSubmitSurveyMessage} setSubmitSurveyMessage={setSubmitSurveyMessage} setLoadingAdmin={setLoadingAdmin} setPostNewSurveyTrigger={setPostNewSurveyTrigger} surveyList={surveyList} setSurveyList={setSurveyList} />
+                  <CreateSurvey setAdminNoSurveys={setAdminNoSurveys} setColorSubmitSurveyMessage={setColorSubmitSurveyMessage} setSubmitSurveyMessage={setSubmitSurveyMessage} setLoadingAdmin={setLoadingAdmin} setPostNewSurveyTrigger={setPostNewSurveyTrigger} surveyList={surveyList} setSurveyList={setSurveyList} />
                 </Row>
               </React.Fragment>
               : <Redirect to="/login" />}

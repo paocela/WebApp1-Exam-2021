@@ -95,6 +95,7 @@ function CreateSurvey(props) {
         setSurveyTitle("");
         setQuestionList([]);
         setSubmitted(true);
+        props.setAdminNoSurveys(false);
     }
 
     return (
@@ -210,7 +211,7 @@ function CreateRightSide(props) {
                 <Row>
                     <Col sm={8}>
                         <Row>
-                            <Col className="form-element" sm={4} className="form-element">
+                            <Col className="form-element" sm={4}>
                                 <h3>
                                     Survey Title
                                 </h3>
@@ -330,12 +331,12 @@ function CreateLeftSide(props) {
                 return;
             }
 
-            if (props.minClosed > props.maxClosed) {
+            if (parseInt(props.minClosed) > parseInt(props.maxClosed)) {
                 setErrorMessageClosed("MIN must be <= then MAX");
                 return;
             }
-            if (props.maxClosed > props.numberAnswers) {
-                setErrorMessageClosed("MAX must be <= then number of questions");
+            if (parseInt(props.maxClosed) > parseInt(props.numberAnswers)) {
+                setErrorMessageClosed("MAX must be <= then number of answers");
                 return;
             }
 

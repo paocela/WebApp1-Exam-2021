@@ -101,7 +101,7 @@ function RightSide(props) {
 
         setAddResponseTrigger(response);
         setMessageColor("success");
-        props.setValidationMessage("Survey submitted correctly!");
+        props.setValidationMessage("Response submitted correctly!");
 
     }
 

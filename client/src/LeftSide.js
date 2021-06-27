@@ -3,7 +3,6 @@ import './App.css';
 import './LeftSide.css';
 import { Col, Row, Button, Badge, Alert } from "react-bootstrap"
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
 
 
 // list of surveys titles - map each survey to a list element (with Link to allow proper setting of URL)

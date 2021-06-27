@@ -265,5 +265,5 @@
 
 ## Users Credentials
 
-- email@polito.it, password
-- 1234@polito.it, password
+- email@polito.it, password (surveys created: Mood, Interest)
+- 1234@polito.it, password (surveys created: Personality)

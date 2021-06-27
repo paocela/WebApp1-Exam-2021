@@ -84,7 +84,7 @@ app.get('/api/surveys', async (req, res) => {
 
 // GET /api/surveysAdmin
 // Retrieve all available surveys - called for a regular user
-app.get('/api/surveysAdmin', /*isLoggedIn,*/ async (req, res) => {
+app.get('/api/surveysAdmin', isLoggedIn, async (req, res) => {
   dao.getListSurveysAdmin(req.user.id)
     .then((surveys) => { res.json(surveys); })
     .catch((error) => { res.status(500).json(error); });
@@ -95,9 +95,10 @@ app.get('/api/surveysAdmin', /*isLoggedIn,*/ async (req, res) => {
 app.get('/api/surveysAdmin/:surveyId', isLoggedIn, async (req, res) => {
   try {
     const responses = await dao.getResponses(req.params.surveyId);
-    
     if (responses.error) {
       res.status(404).json(responses);
+    } else if (responses.length == 0) {
+      res.json(responses);
     } else if (responses[0].AdminId == req.user.id) {
       res.json(responses);
     } else {

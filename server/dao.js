@@ -42,7 +42,7 @@ exports.getListSurveysAdmin = (adminId) => {
   });
 };
 
-// Retrieve all available surveys - called by a regular user
+// retrieve all available responses to a survey
 exports.getResponses = (surveyId) => {
   return new Promise((resolve, reject) => {
     const sql = 'SELECT R.Id, SurveyId, Username, Response, AdminId FROM Responses R, Surveys S WHERE R.SurveyId = ? AND S.Id = R.SurveyId';
