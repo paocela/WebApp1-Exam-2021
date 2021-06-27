@@ -36,7 +36,8 @@ function CreateSurvey(props) {
                 },
                 body: JSON.stringify(addSurveyTrigger)
             });
-            if (response.status == 500) {
+            console.log(response.status)
+            if (response.status === 500) {
                 console.log(response.err);
                 props.setSubmitSurveyMessage(response.err);
                 props.setColorSubmitSurveyMessage("danger");
@@ -61,21 +62,21 @@ function CreateSurvey(props) {
         setErrorMessageQuestions("");
 
         // sanity checks
-        if (surveyTitle == "") {
+        if (surveyTitle === "") {
             setErrorMessageTitle("Please insert title");
             errorFound = true;
         }
-        if (questionList.length == 0) {
+        if (questionList.length === 0) {
             setErrorMessageQuestions("Please insert questions");
             errorFound = true;
         }
         for (let questionIndex in questionList) {
-            if (questionList[questionIndex].question == "") {
+            if (questionList[questionIndex].question === "") {
                 setErrorMessageQuestions("Please fill all questions");
                 errorFound = true;
             }
             for (let answer of questionList[questionIndex].answers) {
-                if (questionList[questionIndex].max != -1 && answer == "") {
+                if (questionList[questionIndex].max !== -1 && answer === "") {
                     setErrorMessageAnswers("Please fill all answers");
                     errorFound = true;
                 }
@@ -126,7 +127,7 @@ function CreateRightSide(props) {
 
 
         // swap with above
-        if (verse == 0) {
+        if (verse === 0) {
             if (index - 1 < 0) {
                 return;
             } else {
@@ -160,7 +161,7 @@ function CreateRightSide(props) {
     // build questions
     for (let index in props.questionList) {
         singleQuestion = props.questionList[index];
-        if (singleQuestion.max == -1) {
+        if (singleQuestion.max === -1) {
             // open question
             questions.push(<div>
                 <Row key={index}>
@@ -323,10 +324,10 @@ function CreateLeftSide(props) {
         let optional;
 
         // closed question --> questionType = 0
-        if (questionType == 0) {
+        if (questionType === 0) {
 
             // check input and display error with message
-            if (props.minClosed == "" || props.maxClosed == "" || props.numberAnswers == "") {
+            if (props.minClosed === "" || props.maxClosed === "" || props.numberAnswers === "") {
                 setErrorMessageClosed("Input cannot be NULL or non numeric");
                 return;
             }
@@ -346,8 +347,8 @@ function CreateLeftSide(props) {
                 question: "",
                 answers: [],
                 numberAnswers: props.numberAnswers,
-                min: props.minClosed,
-                max: props.maxClosed
+                min: parseInt(props.minClosed),
+                max: parseInt(props.maxClosed)
             };
 
             // initialize answers to avoid problems in inserting 3rd answer before 1st
@@ -360,14 +361,14 @@ function CreateLeftSide(props) {
         } else {
 
             // check input and display error with message
-            if (props.optionalOpen == "") {
+            if (props.optionalOpen === "") {
                 setErrorMessageOpen("Input cannot be NULL");
                 return;
             }
 
             setErrorMessageOpen();
 
-            if (props.OptionalClosed == "optional") {
+            if (props.OptionalClosed === "optional") {
                 optional = 0;
             } else {
                 optional = 1;

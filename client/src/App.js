@@ -52,9 +52,10 @@ function App() {
       const response = await fetch('/api/surveys');
       const responseBody = await response.json();
       const res = [...responseBody]
+      console.log(res);
       setSurveyList(res);
       setCurrentSurvey(res[0]);
-      setIndexCurrentUser(currentSurvey.users == undefined ? null : 0);
+      setIndexCurrentUser(currentSurvey.users === undefined ? null : 0);
       setLoading(false);
       setLoadingAdmin(true);
     }
@@ -63,7 +64,7 @@ function App() {
       const response = await fetch('/api/surveysAdmin');
       const responseBody = await response.json();
       const res = responseBody;
-      if(res.length == 0) {
+      if(res.length === 0) {
         setAdminNoSurveys(true);
       } else {
         setSurveyList(res);
@@ -92,7 +93,7 @@ function App() {
       const responseBody = await response.json();
       const res = [...responseBody]
       let temp = [...surveyList];
-      if(res.length == 0) {
+      if(res.length === 0) {
         setAdminNoResponses(true);
       } else {
         setAdminNoResponses(false);
@@ -100,7 +101,7 @@ function App() {
 
       // fix number of responses if while in /admin, a user responded to a survey
       // because number of responses on left side is fetched from server only when the page is loaded
-      if (res.length != temp[currentSurveyIndex].NumberResponses) {
+      if (res.length !== temp[currentSurveyIndex].NumberResponses) {
         temp[currentSurveyIndex].NumberResponses = res.length;
       }
 

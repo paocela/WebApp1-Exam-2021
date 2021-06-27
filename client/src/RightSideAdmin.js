@@ -15,7 +15,7 @@ function RightSideAdmin(props) {
     // build questions
     for (let index in props.currentSurvey.QuestionsAndAnswers) {
         singleQuestion = props.currentSurvey.QuestionsAndAnswers[index];
-        if (singleQuestion.answers.length == 1 && singleQuestion.answers[0] == "") {
+        if (singleQuestion.answers.length === 1 && singleQuestion.answers[0] === "") {
             // open question
             questions.push(<div><OpenQuestion key={index} singleQuestion={singleQuestion} indexCurrentUser={props.indexCurrentUser} /><br /></div>)
         } else if (singleQuestion.answers.length >= 2) {
@@ -29,7 +29,7 @@ function RightSideAdmin(props) {
 
     // function to allow moving between different users
     let calculateNextUser = (flag) => {
-        if (flag == 0) {
+        if (flag === 0) {
             // decrement index - move left
             if (props.indexCurrentUser - 1 < 0) {
                 props.setIndexCurrentUser(props.currentSurvey.Users.length - 1);
@@ -112,7 +112,7 @@ function ClosedQuestion(props) {
 function OpenQuestion(props) {
     let optional = "mandatory";
 
-    if (props.singleQuestion.min == 0) {
+    if (props.singleQuestion.min === 0) {
         optional = "optional";
     }
 
@@ -129,7 +129,7 @@ function OpenQuestion(props) {
                 </Row>
             </ListGroup.Item>
             <ListGroup.Item as="li">
-                <Form.Control as="textarea" plaintext readOnly value={props.singleQuestion.responses[props.indexCurrentUser].response == null ? "" : props.singleQuestion.responses[props.indexCurrentUser].response} />
+                <Form.Control as="textarea" plaintext readOnly value={props.singleQuestion.responses[props.indexCurrentUser].response === null ? "" : props.singleQuestion.responses[props.indexCurrentUser].response} />
             </ListGroup.Item>
         </ListGroup>
     );

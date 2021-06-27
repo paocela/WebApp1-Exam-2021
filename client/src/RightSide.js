@@ -27,7 +27,7 @@ function RightSide(props) {
                 },
                 body: JSON.stringify(addResponseTrigger)
             });
-            if (response.status == 500) {
+            if (response.status === 500) {
                 console.log(response.err);
             }
         }
@@ -52,15 +52,15 @@ function RightSide(props) {
         props.setErrorMessageClosed("");
         props.setValidationMessage("");
 
-        if(userName == "") {
+        if(userName === "") {
             props.setErrorMessageUsername((m) => (m + "Please insert username"))
             setMessageColor("danger");
             errorFound = true;
         }
         for (let questionIndex in props.currentSurvey.QuestionsAndAnswers) {
-            if (props.currentSurvey.QuestionsAndAnswers[questionIndex].max == -1) {
+            if (props.currentSurvey.QuestionsAndAnswers[questionIndex].max === -1) {
                 // open question
-                if (props.currentSurvey.QuestionsAndAnswers[questionIndex].min == 1 && props.responses[questionIndex] == "") {
+                if (props.currentSurvey.QuestionsAndAnswers[questionIndex].min === 1 && props.responses[questionIndex] === "") {
                     props.setErrorMessageOpen((m) => (m + "Mandatory (q. " + questionIndex + ") "));
                     setMessageColor("danger");
                     errorFound = true;
@@ -108,7 +108,7 @@ function RightSide(props) {
     // build questions
     for (let index in props.currentSurvey.QuestionsAndAnswers) {
         singleQuestion = props.currentSurvey.QuestionsAndAnswers[index];
-        if (singleQuestion.answers.length == 1) {
+        if (singleQuestion.answers.length === 1) {
             // open question
             questions.push(<div><OpenQuestion key={index} singleQuestion={singleQuestion} responses={props.responses} setResponses={props.setResponses} index={index} /><br /></div>)
         } else if (singleQuestion.answers.length >= 2) {
@@ -139,7 +139,7 @@ function RightSide(props) {
                                 <Col sm="7">
                                     <Form.Control placeholder="Enter username..." onChange={(event) => (setUserName(event.target.value))} value={userName} />
                                 </Col>
-                                <Col>
+                                <Col className='justify-content-end form-inline'>
                                     <Button className="btn btn-md" variant="outline-primary" onClick={checkFieldsAndSubmit}>SUBMIT</Button>
                                 </Col>
                             </Row>
@@ -171,7 +171,7 @@ function ClosedQuestion(props) {
 
     // init response array
     let a = [...props.responses];
-    if (a[props.index] == undefined) {
+    if (a[props.index] === undefined) {
         a[props.index] = [];
         for (let i = 0; i < props.singleQuestion.answers.length; i++) {
             a[props.index].push(false);
@@ -184,7 +184,7 @@ function ClosedQuestion(props) {
     for (let index in props.singleQuestion.answers) {
         answer = props.singleQuestion.answers[index];
         // TODO: fix radio buttons (don't force single option and don't allow to deselect, for optional case)
-        answerRowList.push(<ListGroup.Item ><Form.Check key={index} type={"checkbox"} label={answer} id={answer} onChange={handleResponseClosed(index)} checked={props.responses[props.index] == undefined ? false : props.responses[props.index][index]} /></ListGroup.Item>);
+        answerRowList.push(<ListGroup.Item ><Form.Check key={index} type={"checkbox"} label={answer} id={answer} onChange={handleResponseClosed(index)} checked={props.responses[props.index] === undefined ? false : props.responses[props.index][index]} /></ListGroup.Item>);
     }
 
     return (
@@ -216,13 +216,13 @@ function OpenQuestion(props) {
         props.setResponses(a);
     }
 
-    if (props.singleQuestion.min == 0) {
+    if (props.singleQuestion.min === 0) {
         optional = "optional";
     }
 
     // init open response
     let a = [...props.responses];
-    if (a[props.index] == undefined) {
+    if (a[props.index] === undefined) {
         a[props.index] = "";
         props.setResponses(a);
     }
@@ -240,7 +240,7 @@ function OpenQuestion(props) {
                 </Row>
             </ListGroup.Item>
             <ListGroup.Item as="li">
-                <Form.Control as="textarea" rows={3} placeholder="Enter answer here..." onChange={handleResponseOpen} value={props.responses[props.index] == undefined ? "" : props.responses[props.index]} />
+                <Form.Control as="textarea" rows={3} placeholder="Enter answer here..." onChange={handleResponseOpen} value={props.responses[props.index] === undefined ? "" : props.responses[props.index]} />
             </ListGroup.Item>
         </ListGroup>
     );
