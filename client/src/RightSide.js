@@ -32,13 +32,13 @@ function RightSide(props) {
             }
         }
         if (isLoaded) {
-            console.log(addResponseTrigger);
             postResponse();
             setUserName("");
             props.setResponses([]);
         } else {
             setIsLoaded((x) => !x);
         }
+        // eslint-disable-next-line
     }, [addResponseTrigger]);
 
 
@@ -110,14 +110,14 @@ function RightSide(props) {
         singleQuestion = props.currentSurvey.QuestionsAndAnswers[index];
         if (singleQuestion.answers.length === 1) {
             // open question
-            questions.push(<div><OpenQuestion key={index} singleQuestion={singleQuestion} responses={props.responses} setResponses={props.setResponses} index={index} /><br /></div>)
+            questions.push(<div key={index} ><OpenQuestion singleQuestion={singleQuestion} responses={props.responses} setResponses={props.setResponses} index={index} /><br /></div>)
         } else if (singleQuestion.answers.length >= 2) {
             // closed question
             let elem = [];
             for (let i = 0; i < singleQuestion.answers.length; i++) {
                 elem.push(0);
             }
-            questions.push(<div><ClosedQuestion key={index} singleQuestion={singleQuestion} responses={props.responses} setResponses={props.setResponses} index={index} /><br /></div>)
+            questions.push(<div key={index} ><ClosedQuestion singleQuestion={singleQuestion} responses={props.responses} setResponses={props.setResponses} index={index} /><br /></div>)
 
         }
     }
@@ -184,7 +184,7 @@ function ClosedQuestion(props) {
     for (let index in props.singleQuestion.answers) {
         answer = props.singleQuestion.answers[index];
         // TODO: fix radio buttons (don't force single option and don't allow to deselect, for optional case)
-        answerRowList.push(<ListGroup.Item ><Form.Check key={index} type={"checkbox"} label={answer} id={answer} onChange={handleResponseClosed(index)} checked={props.responses[props.index] === undefined ? false : props.responses[props.index][index]} /></ListGroup.Item>);
+        answerRowList.push(<ListGroup.Item key={index}><Form.Check type={"checkbox"} label={answer} id={answer} onChange={handleResponseClosed(index)} checked={props.responses[props.index] === undefined ? false : props.responses[props.index][index]} /></ListGroup.Item>);
     }
 
     return (

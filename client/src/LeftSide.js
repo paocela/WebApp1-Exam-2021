@@ -10,7 +10,7 @@ function LeftSide(props) {
 
     return (
         <Col sm={3} className="  d-sm-block below-nav vheight-100 leftDiv" >
-            <h4 class="leftSide-title">Survey List</h4>
+            <h4 className="leftSide-title">Survey List</h4>
             <ListGroup variant="flush" className="trans">
                 {props.surveyList.map(
                     (x, index) => {

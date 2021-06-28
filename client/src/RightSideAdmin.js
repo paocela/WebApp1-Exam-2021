@@ -17,10 +17,10 @@ function RightSideAdmin(props) {
         singleQuestion = props.currentSurvey.QuestionsAndAnswers[index];
         if (singleQuestion.answers.length === 1 && singleQuestion.answers[0] === "") {
             // open question
-            questions.push(<div><OpenQuestion key={index} singleQuestion={singleQuestion} indexCurrentUser={props.indexCurrentUser} /><br /></div>)
+            questions.push(<div key={index}><OpenQuestion singleQuestion={singleQuestion} indexCurrentUser={props.indexCurrentUser} /><br /></div>)
         } else if (singleQuestion.answers.length >= 2) {
             // closed question
-            questions.push(<div><ClosedQuestion key={index} singleQuestion={singleQuestion} indexCurrentUser={props.indexCurrentUser} /><br /></div>)
+            questions.push(<div key={index}><ClosedQuestion singleQuestion={singleQuestion} indexCurrentUser={props.indexCurrentUser} /><br /></div>)
 
         } else {
             // PANIC
@@ -85,8 +85,8 @@ function ClosedQuestion(props) {
     // build answers for single question
     for (let index in props.singleQuestion.answers) {
         answer = props.singleQuestion.answers[index];
-        answerRowList.push(<ListGroup.Item as="li">
-            <Form.Check key={index} type={"checkbox"} checked={props.singleQuestion.responses[props.indexCurrentUser].response[index]} label={answer} id={answer} />
+        answerRowList.push(<ListGroup.Item as="li" key={index}>
+            <Form.Check  type={"checkbox"} checked={props.singleQuestion.responses[props.indexCurrentUser].response[index]} readOnly label={answer} id={answer} />
         </ListGroup.Item>);
     }
 

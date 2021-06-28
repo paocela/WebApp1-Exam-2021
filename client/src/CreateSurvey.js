@@ -51,6 +51,7 @@ function CreateSurvey(props) {
         } else {
             setIsLoaded((x) => !x);
         }
+        // eslint-disable-next-line
     }, [addSurveyTrigger]);
 
     // function called when sumbitting responses
@@ -163,8 +164,8 @@ function CreateRightSide(props) {
         singleQuestion = props.questionList[index];
         if (singleQuestion.max === -1) {
             // open question
-            questions.push(<div>
-                <Row key={index}>
+            questions.push(<div key={index}>
+                <Row >
                     <Col sm={11}>
                         <OpenQuestion singleQuestion={singleQuestion} setQuestionList={props.setQuestionList} questionList={props.questionList} index={index} /><br />
                     </Col>
@@ -184,8 +185,8 @@ function CreateRightSide(props) {
             </div>)
         } else {
             // closed question
-            questions.push(<div>
-                <Row key={index}>
+            questions.push(<div key={index}>
+                <Row >
                     <Col sm={11}>
                         <ClosedQuestion singleQuestion={singleQuestion} setQuestionList={props.setQuestionList} questionList={props.questionList} index={index} /><br />
                     </Col>
@@ -257,7 +258,7 @@ function ClosedQuestion(props) {
     }
 
     for (let i = 0; i < props.singleQuestion.numberAnswers; i++) {
-        answerRowList.push(<ListGroup.Item as="li">
+        answerRowList.push(<ListGroup.Item as="li" key={i}>
             <Row key={i}>
                 <Col className="form-element" sm={2}>Answer {i}:</Col>
                 <Col sm={10}>
@@ -269,7 +270,7 @@ function ClosedQuestion(props) {
 
     return (
         <ListGroup as="ul">
-            <ListGroup.Item as="li" variant="secondary">
+            <ListGroup.Item as="li" variant="secondary" >
                 <Row>
                     <Col className="form-element" sm={2}>Question {props.index}:</Col>
                     <Col sm={10}>
@@ -293,7 +294,7 @@ function OpenQuestion(props) {
 
     return (
         <ListGroup as="ul">
-            <ListGroup.Item as="li" variant="secondary">
+            <ListGroup.Item as="li" variant="secondary" >
                 <Row>
                     <Col sm={2}>Question {props.index}:</Col>
                     <Col sm={10}>
@@ -387,7 +388,7 @@ function CreateLeftSide(props) {
 
     return (
         <Col sm={3} className="  d-sm-block below-nav vheight-100 leftDiv" >
-            <h4 class="leftSide-title">Actions</h4>
+            <h4 className="leftSide-title">Actions</h4>
             <ListGroup variant="flush" className="trans">
                 <ListGroup.Item active >
                     Closed question

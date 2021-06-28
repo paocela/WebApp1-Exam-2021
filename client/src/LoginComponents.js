@@ -7,7 +7,7 @@ import "./App.css"
 
 // sanity checks on username and password
 function validateCredentials(username, password) {
-  const reUsername = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const reUsername = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const rePassword = /(?=.{6,15})/;
   if (!reUsername.test(username) || !rePassword.test(password)) {
     return false;
@@ -28,6 +28,7 @@ function LoginForm(props) {
   // function to handle submit of login form - will interact with app and then with server
   const handleSubmit = (event) => {
     let valid = true;
+    props.setErrorMessage("");
     event.preventDefault();
     const credentials = { username, password };
 
@@ -40,6 +41,10 @@ function LoginForm(props) {
       props.setErrorMessage('Format not valid')
     }
   };
+
+  const resetErrorMessage = () => {
+    props.setErrorMessage("");
+  }
 
   // Link "Go back as user" button: position to the rigth of the container
   return (<>
@@ -72,7 +77,7 @@ function LoginForm(props) {
             <Col></Col>
             <Col>
               <Link className='justify-content-end form-inline' type="submit" to="/" key="/login">
-                <Button variant="secondary" type="submit">
+                <Button variant="secondary" type="submit" onClick={resetErrorMessage}>
                   Go back as user
                 </Button>
               </Link>

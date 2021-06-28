@@ -15,7 +15,7 @@ function NavBar(props) {
                         {iconSurvey}
                     </Col>
                     <Col>
-                        <div inline className="title form-inline my-2 my-lg-0 mx-auto d-sm-block">
+                        <div inline="true" className="title form-inline my-2 my-lg-0 mx-auto d-sm-block">
                             {props.title}
                         </div>
                     </Col>

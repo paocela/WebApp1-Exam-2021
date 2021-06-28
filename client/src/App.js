@@ -52,10 +52,9 @@ function App() {
       const response = await fetch('/api/surveys');
       const responseBody = await response.json();
       const res = [...responseBody]
-      console.log(res);
       setSurveyList(res);
       setCurrentSurvey(res[0]);
-      setIndexCurrentUser(currentSurvey.users === undefined ? null : 0);
+      setIndexCurrentUser(0);
       setLoading(false);
       setLoadingAdmin(true);
     }
@@ -126,6 +125,7 @@ function App() {
     if (loggedIn) {
       fetchAll();
     }
+    // eslint-disable-next-line
   }, [getUsersTrigger]);
 
   // functions to handle login and logout - interact with server
